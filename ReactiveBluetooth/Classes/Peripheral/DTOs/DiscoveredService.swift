@@ -12,3 +12,7 @@ public struct DiscoveredService {
 	public let peripheral: CBPeripheral
 	public let service: CBService
 }
+
+extension DiscoveredService: PeripheralProvider {}
+
+extension DiscoveredService: ServiceProvider {}

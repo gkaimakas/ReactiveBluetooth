@@ -13,3 +13,7 @@ public struct DiscoveredCharacteristicError: Error {
 	public let service: CBService
 	public let error: NSError
 }
+
+extension DiscoveredCharacteristicError: PeripheralProviderError {}
+
+extension DiscoveredCharacteristicError: ServiceProviderError {}

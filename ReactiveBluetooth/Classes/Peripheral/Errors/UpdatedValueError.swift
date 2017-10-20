@@ -13,3 +13,7 @@ public struct UpdatedValueError: Error {
 	public let characteristic: CBCharacteristic
 	public let error: NSError
 }
+
+extension UpdatedValueError: PeripheralProviderError {}
+
+extension UpdatedValueError: CharacteristicProviderError {}

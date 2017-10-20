@@ -12,3 +12,5 @@ public struct DiscoveredServiceError: Error {
 	public let peripheral: CBPeripheral
 	public let error: NSError
 }
+
+extension DiscoveredServiceError: PeripheralProviderError {}

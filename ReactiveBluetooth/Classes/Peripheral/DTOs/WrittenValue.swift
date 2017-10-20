@@ -21,3 +21,7 @@ public struct WrittenValue {
 		self.value = characteristic.value
 	}
 }
+
+extension WrittenValue: PeripheralProvider {}
+
+extension WrittenValue: CharacteristicProvider {}

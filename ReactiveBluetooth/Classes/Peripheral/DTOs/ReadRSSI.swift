@@ -12,3 +12,5 @@ public struct ReadRSSI {
 	public let peripheral: CBPeripheral
 	public let RSSI: NSNumber
 }
+
+extension ReadRSSI: PeripheralProvider {}

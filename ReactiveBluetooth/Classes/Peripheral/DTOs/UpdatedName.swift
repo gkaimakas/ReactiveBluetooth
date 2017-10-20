@@ -17,3 +17,5 @@ public struct UpdatedName {
 		self.name = peripheral.name
 	}
 }
+
+extension UpdatedName: PeripheralProvider {}

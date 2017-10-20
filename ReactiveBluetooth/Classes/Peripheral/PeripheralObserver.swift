@@ -42,8 +42,11 @@ public class PeripheralObserver: NSObject {
 		(didUpdateValue, didUpdateValueObserver) = Signal.pipe()
 
 		super.init()
+
 	}
 }
+
+//MARK:- CBPeripheralDelegate
 
 extension PeripheralObserver: CBPeripheralDelegate {
 
@@ -100,7 +103,8 @@ extension PeripheralObserver: CBPeripheralDelegate {
 			characteristics
 				.map { DiscoveredCharacteristic(peripheral: peripheral,
 				                                service: service,
-				                                characteristic: $0)
+				                                characteristic: $0,
+				                                delegate: self)
 				}
 				.map { Result<DiscoveredCharacteristic, DiscoveredCharacteristicError>(value: $0) }
 				.forEach { didDiscoverCharacteristicObserver.send(value: $0) }
@@ -121,7 +125,8 @@ extension PeripheralObserver: CBPeripheralDelegate {
 		}
 
 		let updatedNotificationState = UpdatedNotificationState(peripheral: peripheral,
-		                                                        characteristic: characteristic)
+		                                                        characteristic: characteristic,
+		                                                        delegate: self)
 		let result = Result<UpdatedNotificationState, UpdatedNotificationStateError>(value: updatedNotificationState)
 		didUpdateNotificationStateObserver.send(value: result)
 	}
@@ -161,7 +166,8 @@ extension PeripheralObserver: CBPeripheralDelegate {
 		}
 
 		let updatedValue = UpdatedValue(peripheral: peripheral,
-		                                characteristic: characteristic)
+		                                characteristic: characteristic,
+		                                delegate: self)
 
 		let result = Result<UpdatedValue, UpdatedValueError>(value: updatedValue)
 
@@ -169,3 +175,7 @@ extension PeripheralObserver: CBPeripheralDelegate {
 
 	}
 }
+
+//MARK:- PeripheralDelegate
+
+extension PeripheralObserver: PeripheralDelegate {}

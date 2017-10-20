@@ -12,3 +12,5 @@ public struct ReadRSSIError: Error {
 	public let peripheral: CBPeripheral
 	public let error: NSError
 }
+
+extension ReadRSSIError: PeripheralProviderError {}

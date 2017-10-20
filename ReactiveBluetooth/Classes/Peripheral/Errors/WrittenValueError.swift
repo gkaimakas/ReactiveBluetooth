@@ -13,3 +13,7 @@ public struct WrittenValueError: Error {
 	public let characteristic: CBCharacteristic
 	public let error: NSError
 }
+
+extension WrittenValueError: PeripheralProviderError {}
+
+extension WrittenValueError: CharacteristicProviderError {}
