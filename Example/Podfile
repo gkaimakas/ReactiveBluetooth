@@ -1,12 +1,13 @@
+platform :ios, 11.0
 use_frameworks!
 
 target 'ReactiveBluetooth_Example' do
-  pod 'ReactiveBluetooth', :path => '../'
+	pod 'ReactiveBluetooth', :path => '../'
 
-  target 'ReactiveBluetooth_Tests' do
-    inherit! :search_paths
+	target 'ReactiveBluetooth_Tests' do
+		inherit! :search_paths
 
-    pod 'Quick', '~> 1.2.0'
-  pod 'Nimble', '~> 7.0.2'
+		pod 'Quick', '~> 1.2.0'
+		pod 'Nimble', '~> 7.0.2'
   end
 end
