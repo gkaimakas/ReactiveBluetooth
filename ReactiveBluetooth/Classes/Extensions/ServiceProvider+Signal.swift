@@ -24,3 +24,17 @@ public extension Signal where Value: ResultProtocol, Value.Value: ServiceProvide
 		return filter { $0.isIncluded(service: service) }
 	}
 }
+
+public extension Signal where Value: ServiceProvider {
+	func filter(service: CBService) -> Signal<Value, Error> {
+		return filter { $0.service == service }
+	}
+
+	func filter(service: CBUUID) -> Signal<Value, Error> {
+		return filter { $0.service.uuid.isEqual(service) }
+	}
+
+	func filter(service: String) -> Signal<Value, Error> {
+		return filter { $0.service.uuid.uuidString == service }
+	}
+}

@@ -17,11 +17,11 @@ public class PeripheralObserver: NSObject {
 	public let didReadRSSI: Signal<Result<ReadRSSI, ReadRSSIError>, NoError>
 	fileprivate let didReadRSSIObserver: Signal<Result<ReadRSSI, ReadRSSIError>, NoError>.Observer
 
-	public let didDiscoverService: Signal<Result<DiscoveredService, DiscoveredServiceError>, NoError>
-	fileprivate let didDiscoverServiceObserver: Signal<Result<DiscoveredService, DiscoveredServiceError>, NoError>.Observer
+	public let didDiscoverServices: Signal<Result<DiscoveredServicesList, DiscoveredServiceError>, NoError>
+	fileprivate let didDiscoverServicesObserver: Signal<Result<DiscoveredServicesList, DiscoveredServiceError>, NoError>.Observer
 
-	public let didDiscoverCharacteristic: Signal<Result<DiscoveredCharacteristic, DiscoveredCharacteristicError>, NoError>
-	fileprivate let didDiscoverCharacteristicObserver: Signal<Result<DiscoveredCharacteristic, DiscoveredCharacteristicError>, NoError>.Observer
+	public let didDiscoverCharacteristics: Signal<Result<DiscoveredCharacteristicsList, DiscoveredCharacteristicError>, NoError>
+	fileprivate let didDiscoverCharacteristicsObserver: Signal<Result<DiscoveredCharacteristicsList, DiscoveredCharacteristicError>, NoError>.Observer
 
 	public let didUpdateNotificationState: Signal<Result<UpdatedNotificationState, UpdatedNotificationStateError>, NoError>
 	fileprivate let didUpdateNotificationStateObserver: Signal<Result<UpdatedNotificationState, UpdatedNotificationStateError>, NoError>.Observer
@@ -35,8 +35,8 @@ public class PeripheralObserver: NSObject {
 	public override init() {
 		(didUpdateName, didUpdateNameObserver) = Signal.pipe()
 		(didReadRSSI, didReadRSSIObserver) = Signal.pipe()
-		(didDiscoverService, didDiscoverServiceObserver) = Signal.pipe()
-		(didDiscoverCharacteristic, didDiscoverCharacteristicObserver) = Signal.pipe()
+		(didDiscoverServices, didDiscoverServicesObserver) = Signal.pipe()
+		(didDiscoverCharacteristics, didDiscoverCharacteristicsObserver) = Signal.pipe()
 		(didUpdateNotificationState, didUpdateNotificationStateObserver) = Signal.pipe()
 		(didWriteValue, didWriteValueObserver) = Signal.pipe()
 		(didUpdateValue, didUpdateValueObserver) = Signal.pipe()
@@ -70,18 +70,17 @@ extension PeripheralObserver: CBPeripheralDelegate {
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
 
 		if let error = error as NSError? {
-			let result = Result<DiscoveredService, DiscoveredServiceError>(error: DiscoveredServiceError(peripheral: peripheral, error: error))
-			didDiscoverServiceObserver.send(value: result)
+			let result = Result<DiscoveredServicesList, DiscoveredServiceError>(error: DiscoveredServiceError(peripheral: peripheral,
+			                                                                                                  error: error))
+			didDiscoverServicesObserver.send(value: result)
 			return
 		}
 
 		if let services = peripheral.services {
-			services
-				.map { DiscoveredService(peripheral: peripheral,
-				                         service: $0)
-				}
-				.map { Result<DiscoveredService, DiscoveredServiceError>(value: $0) }
-				.forEach { didDiscoverServiceObserver.send(value: $0) }
+			let discoveredServices = DiscoveredServicesList(peripheral: peripheral,
+			                       services: services,
+			                       delegate: self)
+			let result = Result<DiscoveredServicesList, DiscoveredServiceError>(value: discoveredServices)
 		}
 
 	}
@@ -94,20 +93,20 @@ extension PeripheralObserver: CBPeripheralDelegate {
 			let discoveredCharacteristicError = DiscoveredCharacteristicError(peripheral: peripheral,
 			                                                                  service: service,
 			                                                                  error: error)
-			let result = Result<DiscoveredCharacteristic, DiscoveredCharacteristicError>(error: discoveredCharacteristicError)
-			didDiscoverCharacteristicObserver.send(value: result)
+			let result = Result<DiscoveredCharacteristicsList, DiscoveredCharacteristicError>(error: discoveredCharacteristicError)
+			didDiscoverCharacteristicsObserver.send(value: result)
 			return
 		}
 
 		if let characteristics = service.characteristics {
-			characteristics
-				.map { DiscoveredCharacteristic(peripheral: peripheral,
-				                                service: service,
-				                                characteristic: $0,
-				                                delegate: self)
-				}
-				.map { Result<DiscoveredCharacteristic, DiscoveredCharacteristicError>(value: $0) }
-				.forEach { didDiscoverCharacteristicObserver.send(value: $0) }
+			let discoveredCharacteristicsList = DiscoveredCharacteristicsList(peripheral: peripheral,
+			                                                                 service: service,
+			                                                                 characteristics: characteristics,
+			                                                                 delegate: self)
+
+			let result = Result<DiscoveredCharacteristicsList, DiscoveredCharacteristicError>(value: discoveredCharacteristicsList)
+			didDiscoverCharacteristicsObserver.send(value: result)
+
 		}
 	}
 
@@ -178,4 +177,5 @@ extension PeripheralObserver: CBPeripheralDelegate {
 
 //MARK:- PeripheralDelegate
 
-extension PeripheralObserver: PeripheralDelegate {}
+extension PeripheralObserver: PeripheralDelegate {
+}

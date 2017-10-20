@@ -24,3 +24,17 @@ public extension Signal where Value: ResultProtocol, Value.Value: Characteristic
 		return filter { $0.isIncluded(characteristic: characteristic) }
 	}
 }
+
+public extension Signal where Value: CharacteristicProvider {
+	func filter(characteristic: CBCharacteristic) -> Signal<Value, Error> {
+		return filter { $0.characteristic == characteristic }
+	}
+
+	func filter(characteristic: CBUUID) -> Signal<Value, Error> {
+		return filter { $0.characteristic.uuid.isEqual(characteristic) }
+	}
+
+	func filter(characteristic: String) -> Signal<Value, Error> {
+		return filter { $0.characteristic.uuid.uuidString == characteristic }
+	}
+}

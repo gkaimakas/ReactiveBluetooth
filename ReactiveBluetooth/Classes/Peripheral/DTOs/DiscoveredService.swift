@@ -11,6 +11,7 @@ import Foundation
 public struct DiscoveredService {
 	public let peripheral: CBPeripheral
 	public let service: CBService
+	public let delegate: PeripheralDelegate
 }
 
 extension DiscoveredService: PeripheralProvider {}

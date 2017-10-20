@@ -13,21 +13,29 @@ import Result
 public protocol PeripheralDelegate: CBPeripheralDelegate {
 	var didUpdateName: Signal<UpdatedName, NoError> { get }
 	var didReadRSSI: Signal<Result<ReadRSSI, ReadRSSIError>, NoError> { get }
-	var didDiscoverService: Signal<Result<DiscoveredService, DiscoveredServiceError>, NoError> { get }
-	var didDiscoverCharacteristic: Signal<Result<DiscoveredCharacteristic, DiscoveredCharacteristicError>, NoError> { get }
+	var didDiscoverServices: Signal<Result<DiscoveredServicesList, DiscoveredServiceError>, NoError> { get }
+	var didDiscoverCharacteristics: Signal<Result<DiscoveredCharacteristicsList, DiscoveredCharacteristicError>, NoError> { get }
 	var didUpdateNotificationState: Signal<Result<UpdatedNotificationState, UpdatedNotificationStateError>, NoError> { get }
 	var didWriteValue: Signal<Result<WrittenValue, WrittenValueError>, NoError> { get }
 	var didUpdateValue: Signal<Result<UpdatedValue, UpdatedValueError>, NoError> { get }
-
-	func writeValue(peripheral: CBPeripheral,
-	                characteristic: CBCharacteristic,
-	                value: Data) -> SignalProducer<WrittenValue, WrittenValueError>
-
-	func readValue(peripheral: CBPeripheral, characteristic: CBCharacteristic) -> SignalProducer<UpdatedValue, UpdatedValueError>
-	func setNotifyValue(peripheral: CBPeripheral, characteristic: CBCharacteristic, enabled: Bool) -> SignalProducer<UpdatedNotificationState, UpdatedNotificationStateError>
 }
 
 public extension PeripheralDelegate {
+
+	func discoverCharacteristics(peripheral: CBPeripheral, service: CBService, uuids: [CBUUID]?) -> SignalProducer<DiscoveredCharacteristicsList, DiscoveredCharacteristicError> {
+
+		let signal = didDiscoverCharacteristics
+			.filter(peripheral: peripheral)
+			.filter(service: service.uuid)
+			.dematerializeValue()
+
+		let resultProducer = SignalProducer(signal)
+
+		return SignalProducer<Void, DiscoveredCharacteristicError> { peripheral.discoverCharacteristics(uuids, for: service) }
+			.then(resultProducer)
+			.take(first: 1)
+
+	}
 
 	/// Writes a value to the given `characteristic` of the peripheral and returns the result of the operation.
 	/// It is assumed that the CBCharacteristicWriteType is `.withResponse`

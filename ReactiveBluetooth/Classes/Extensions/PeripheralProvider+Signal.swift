@@ -16,3 +16,9 @@ public extension Signal where Value: ResultProtocol, Value.Value: PeripheralProv
 		return filter { $0.isIncluded(peripheral: peripheral) }
 	}
 }
+
+public extension Signal where Value: PeripheralProvider {
+	func filter(peripheral: CBPeripheral) -> Signal<Value, Error> {
+		return filter { $0.peripheral == peripheral }
+	}
+}
