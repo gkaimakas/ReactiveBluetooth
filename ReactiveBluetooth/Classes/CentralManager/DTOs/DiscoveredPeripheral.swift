@@ -14,3 +14,9 @@ public struct DiscoveredPeripheral {
 	public let advertismentData: [String: Any]
 	public let RSSI: NSNumber
 }
+
+extension DiscoveredPeripheral: CentralManagerProvider {}
+
+extension DiscoveredPeripheral: PeripheralProvider {}
+
+extension DiscoveredPeripheral: RSSIProvider {}

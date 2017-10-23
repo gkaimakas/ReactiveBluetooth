@@ -6,6 +6,7 @@
 //  Copyright (c) 2017 gkaimakas. All rights reserved.
 //
 
+import ReactiveBluetooth
 import UIKit
 
 class ViewController: UIViewController {

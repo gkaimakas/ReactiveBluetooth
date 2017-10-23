@@ -16,3 +16,5 @@ public struct PeripheralDisconnection {
 extension PeripheralDisconnection: CentralManagerProvider {}
 
 extension PeripheralDisconnection: PeripheralProvider {}
+
+extension PeripheralDisconnection: PeripheralDisconnectionProvider {}

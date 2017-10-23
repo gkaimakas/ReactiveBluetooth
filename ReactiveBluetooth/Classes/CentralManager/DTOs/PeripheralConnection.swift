@@ -16,3 +16,5 @@ public struct PeripheralConnection {
 extension PeripheralConnection: CentralManagerProvider {}
 
 extension PeripheralConnection: PeripheralProvider {}
+
+extension PeripheralConnection: PeripheralConnectionProvider {}

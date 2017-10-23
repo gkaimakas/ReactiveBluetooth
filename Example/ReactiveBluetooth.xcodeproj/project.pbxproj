@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		132ACCBB1F9E11AF009B736C /* SimpleSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132ACCBA1F9E11AF009B736C /* SimpleSensor.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		0D9219B1F5F8510FA72DB7C4 /* Pods-ReactiveBluetooth_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactiveBluetooth_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ReactiveBluetooth_Tests/Pods-ReactiveBluetooth_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		132ACCBA1F9E11AF009B736C /* SimpleSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleSensor.swift; sourceTree = "<group>"; };
 		19F0B8FA7A93E777C8C891BC /* Pods-ReactiveBluetooth_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactiveBluetooth_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ReactiveBluetooth_Example/Pods-ReactiveBluetooth_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		22A2F8CF52755ACA51FD405E /* Pods_ReactiveBluetooth_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactiveBluetooth_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A389C595BDF96FA130E0372 /* ReactiveBluetooth.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ReactiveBluetooth.podspec; path = ../ReactiveBluetooth.podspec; sourceTree = "<group>"; };
@@ -69,6 +71,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		132ACCB91F9E1198009B736C /* Sensor */ = {
+			isa = PBXGroup;
+			children = (
+				132ACCBA1F9E11AF009B736C /* SimpleSensor.swift */,
+			);
+			path = Sensor;
+			sourceTree = "<group>";
+		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
@@ -93,6 +103,7 @@
 		607FACD21AFB9204008FA782 /* Example for ReactiveBluetooth */ = {
 			isa = PBXGroup;
 			children = (
+				132ACCB91F9E1198009B736C /* Sensor */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
@@ -382,6 +393,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				132ACCBB1F9E11AF009B736C /* SimpleSensor.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

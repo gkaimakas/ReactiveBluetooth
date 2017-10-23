@@ -19,3 +19,5 @@ extension PeripheralDisconnectionError: CentralManagerProvider {}
 extension PeripheralDisconnectionError: PeripheralProvider {}
 
 extension PeripheralDisconnectionError: ErrorProvider {}
+
+extension PeripheralDisconnectionError: PeripheralDisconnectionErrorProvider {}

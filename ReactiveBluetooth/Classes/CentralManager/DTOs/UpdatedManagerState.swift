@@ -12,3 +12,7 @@ public struct UpdatedManagerState {
 	public let central: CBCentralManager
 	public let state: CBManagerState
 }
+
+extension UpdatedManagerState: CentralManagerProvider {}
+
+extension UpdatedManagerState: ManagerStateProvider {}

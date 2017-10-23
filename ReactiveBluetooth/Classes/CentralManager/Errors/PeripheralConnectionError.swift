@@ -19,3 +19,5 @@ extension PeripheralConnectionError: CentralManagerProvider {}
 extension PeripheralConnectionError: PeripheralProvider {}
 
 extension PeripheralConnectionError: ErrorProvider {}
+
+extension PeripheralConnectionError: PeripheralConnectionErrorProvider {}

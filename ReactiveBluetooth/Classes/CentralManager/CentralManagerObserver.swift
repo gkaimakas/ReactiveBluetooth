@@ -10,8 +10,7 @@ import Foundation
 import ReactiveSwift
 import Result
 
-public class CentralManager: NSObject {
-	public let peripheralDelegate: PeripheralDelegate
+public class CentralManagerObserver: NSObject {
 
 	public let didUpdateState: Signal<UpdatedManagerState, NoError>
 	public let didUpdateStateObserver: Signal<UpdatedManagerState, NoError>.Observer
@@ -24,20 +23,54 @@ public class CentralManager: NSObject {
 
 	public let didDisconnectFromPeripheral: Signal<Result<PeripheralDisconnection, PeripheralDisconnectionError>, NoError>
 	public let didDisconnectFromPeripheralObserver: Signal<Result<PeripheralDisconnection, PeripheralDisconnectionError>, NoError>.Observer
-	
 
-	public init(peripheralDelegate: PeripheralDelegate) {
-		self.peripheralDelegate = peripheralDelegate
+	public let didStopScan: Signal<CBCentralManager, NoError>
+	private let didStopScanObserver: Signal<CBCentralManager, NoError>.Observer
+
+	public override init() {
 
 		(didUpdateState, didUpdateStateObserver) = Signal.pipe()
 		(didDiscoverPeripheral, didDiscoverPeripheralObserver) = Signal.pipe()
 		(didConnectToPeripheral, didConnectToPeripheralObserver) = Signal.pipe()
 		(didDisconnectFromPeripheral, didDisconnectFromPeripheralObserver) = Signal.pipe()
+
+		(didStopScan, didStopScanObserver) = Signal.pipe()
+
+		super.init()
 	}
 
+	public func scanForPeripherals(central: CBCentralManager,
+	                               services: [CBUUID]?,
+	                               options: [String: Any]?) -> SignalProducer<DiscoveredPeripheral, NoError> {
+
+		let discoveredPeriphralsProducer = SignalProducer(didDiscoverPeripheral
+			.filter(central: central)
+		)
+
+		return SignalProducer<Void, NoError> {central
+				.scanForPeripherals(withServices: services, options: options)
+			}
+			.then(discoveredPeriphralsProducer)
+			.take(until: didStopScan
+				.filter(central: central)
+				.map { _ in () }
+		)
+
+	}
+
+	public func stopScan(central: CBCentralManager) -> SignalProducer<CBCentralManager, NoError> {
+		let producer = SignalProducer<CBCentralManager, NoError> { observer, _ in
+			central.stopScan()
+			self.didStopScanObserver.send(value: central)
+			observer.send(value: central)
+			observer.sendCompleted()
+		}
+
+		return producer
+	}
 }
 
-extension CentralManager: CBCentralManagerDelegate {
+extension CentralManagerObserver: CBCentralManagerDelegate {
 	public func centralManagerDidUpdateState(_ central: CBCentralManager) {
 		let state = UpdatedManagerState(central: central,
 		                                state: central.state)
