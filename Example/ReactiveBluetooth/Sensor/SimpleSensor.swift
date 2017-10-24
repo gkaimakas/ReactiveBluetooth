@@ -13,16 +13,8 @@ import ReactiveSwift
 import Result
 
 class SimpleSensor {
-	let central: CBCentralManager
-	let centralObserver: CentralManagerObserver
-	let peripheralObserver: PeripheralObserver
 
 	init() {
-		peripheralObserver = PeripheralObserver()
-		centralObserver = CentralManagerObserver()
-
-		central = CBCentralManager(delegate: centralObserver, queue: nil)
-
 	
 	}
 }

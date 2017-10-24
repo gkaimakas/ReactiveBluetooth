@@ -41,6 +41,12 @@ extension PeripheralObserver: CBPeripheralDelegate {
 		                                                error: error))
 	}
 
+	public func peripheral(_ peripheral: CBPeripheral, didDiscoverIncludedServicesFor service: CBService, error: Error?) {
+		eventsObserver.send(value: .didDiscoverIncludedServices(peripheral: peripheral,
+		                                                        service: service,
+		                                                        error: error))
+	}
+
 	public func peripheral(_ peripheral: CBPeripheral,
 	                       didDiscoverCharacteristicsFor service: CBService,
 	                       error: Error?) {
@@ -77,7 +83,4 @@ extension PeripheralObserver: CBPeripheralDelegate {
 		                                           error: error))
 
 	}
-}
-
-extension PeripheralObserver: PeripheralDelegate {
 }

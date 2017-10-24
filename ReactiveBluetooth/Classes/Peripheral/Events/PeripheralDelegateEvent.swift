@@ -12,6 +12,7 @@ public enum PeripheralDelegateEvent {
 	case didUpdateName(peripheral: CBPeripheral)
 	case didReadRSSI(peripheral: CBPeripheral, RSSI: NSNumber, error: Error?)
 	case didDiscoverServices(peripheral: CBPeripheral, error: Error?)
+	case didDiscoverIncludedServices(peripheral: CBPeripheral, service: CBService, error: Error?)
 	case didDiscoverCharacteristics(peripheral: CBPeripheral, service: CBService, error: Error?)
 	case didUpdateNotificationState(peripheral: CBPeripheral, characteristic: CBCharacteristic, error: Error?)
 	case didWriteValue(peripheral: CBPeripheral, characteristic: CBCharacteristic, error: Error?)
@@ -24,6 +25,8 @@ public enum PeripheralDelegateEvent {
 		case .didReadRSSI(peripheral: let _peripheral, RSSI: _, error: _):
 			return peripheral == _peripheral
 		case .didDiscoverServices(peripheral: let _peripheral, error: _):
+			return peripheral == _peripheral
+		case .didDiscoverIncludedServices(peripheral: let _peripheral, service: _, error: _):
 			return peripheral == _peripheral
 		case .didDiscoverCharacteristics(peripheral: let _peripheral, service: _, error: _):
 			return peripheral == _peripheral
@@ -38,6 +41,8 @@ public enum PeripheralDelegateEvent {
 
 	public func filter(service: CBService) -> Bool {
 		switch self {
+		case .didDiscoverIncludedServices(peripheral: _, service: let _service, error: _):
+			return service == _service
 		case .didDiscoverCharacteristics(peripheral: _, service: let _service, error: _):
 			return service == _service
 		default:
@@ -47,6 +52,8 @@ public enum PeripheralDelegateEvent {
 
 	public func filter(service: CBUUID) -> Bool {
 		switch self {
+		case .didDiscoverIncludedServices(peripheral: _, service: let _service, error: _):
+			return service.isEqual(_service.uuid)
 		case .didDiscoverCharacteristics(peripheral: _, service: let _service, error: _):
 			return service.isEqual(_service.uuid)
 		default:
@@ -56,6 +63,8 @@ public enum PeripheralDelegateEvent {
 
 	public func filter(service: String) -> Bool {
 		switch self {
+		case .didDiscoverIncludedServices(peripheral: _, service: let _service, error: _):
+			return service == _service.uuid.uuidString
 		case .didDiscoverCharacteristics(peripheral: _, service: let _service, error: _):
 			return service == _service.uuid.uuidString
 		default:
@@ -120,7 +129,7 @@ public enum PeripheralDelegateEvent {
 		}
 	}
 
-	public func isDidDiscoverServicesNameEvent() -> Bool {
+	public func isDidDiscoverServicesEvent() -> Bool {
 		switch self {
 		case .didDiscoverServices(peripheral: _, error: _):
 			return true
@@ -129,7 +138,16 @@ public enum PeripheralDelegateEvent {
 		}
 	}
 
-	public func isDidDiscoverCharacteristicsNameEvent() -> Bool {
+	public func isDidDiscoverIncludedServicesEvent() -> Bool {
+		switch self {
+		case .didDiscoverIncludedServices(peripheral: _, service: _, error: _):
+			return true
+		default:
+			return false
+		}
+	}
+
+	public func isDidDiscoverCharacteristicsEvent() -> Bool {
 		switch self {
 		case .didDiscoverCharacteristics(peripheral: _, service: _, error: _):
 			return true
