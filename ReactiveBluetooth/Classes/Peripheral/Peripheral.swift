@@ -17,8 +17,10 @@ public class Peripheral {
 	internal init(peripheral: CBPeripheral) {
 		self.peripheral = peripheral
 		self.peripheralDelegate = PeripheralObserver()
+		self.peripheral.delegate = self.peripheralDelegate
 	}
 
+	/// Discovers services
 	public func discoverServices(_ servicesUUIDs: [CBUUID]?) -> SignalProducer<Service, NSError> {
 
 		let signal = peripheralDelegate
@@ -57,6 +59,7 @@ public class Peripheral {
 		return producer
 	}
 
+	/// Reads the peripheral's RSSI
 	public func readRSSI() -> SignalProducer<NSNumber, NSError> {
 
 		let signal = peripheralDelegate
