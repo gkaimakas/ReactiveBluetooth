@@ -22,5 +22,7 @@ class SimpleSensor {
 		centralObserver = CentralManagerObserver()
 
 		central = CBCentralManager(delegate: centralObserver, queue: nil)
+
+	
 	}
 }
