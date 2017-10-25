@@ -15,7 +15,7 @@ import UIKit
 class ViewController: UIViewController {
 	let centralManager = CentralManager()
 
-	var peripheral: Peripheral!
+	var peripheral: MutableProperty<Peripheral?> = MutableProperty(nil)
 
 
     override func viewDidLoad() {
@@ -29,21 +29,40 @@ class ViewController: UIViewController {
 			.filter { $0 == CBManagerState.poweredOn }
 			.flatMap(.latest) { _ in return self.centralManager.scanForPeripherals(withServices: [CBUUID(string: "5AF91801-0140-4F26-B16A-1CE6140D552D")]) }
 			.take(first: 1)
-			.flatMap(.latest) { $0.connect() }
-			.on(value: { self.peripheral = $0 })
 
+		peripheral <~ producer
+			.flatMapError { _ in return SignalProducer.empty }
 
 		producer
+			.flatMap(.latest) { $0.connect() }
 			.flatMap(.latest) { _peripheral -> SignalProducer<Service, NSError> in
 				return _peripheral.discoverServices()
 			}
 			.flatMap(.concat) { _service -> SignalProducer<Characteristic, NSError> in
-				print("Service: \(_service.uuid.uuidString)")
 				return _service.discoverCharacteristics()
 			}
 			.map { $0.uuid.uuidString }
-			.on(value: { print($0) })
+			.then(centralManager.stopScan())
+			.then(self.peripheral
+				.producer
+				.skipNil()
+				.flatMap(.latest) { $0.disconnect() }
+			)
 			.start()
+
+		peripheral
+			.producer
+			.skipNil()
+			.flatMap(.latest) { $0.state.producer }
+			.startWithValues { state in
+				switch state {
+				case .connected: print("connected")
+				case .connecting: print("connecting")
+				case .disconnected: print("disconnected")
+				case .disconnecting: print("disconnecting")
+				}
+		}
+
     }
 
     override func didReceiveMemoryWarning() {

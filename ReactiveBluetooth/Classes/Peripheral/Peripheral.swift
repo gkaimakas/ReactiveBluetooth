@@ -7,13 +7,16 @@
 
 import CoreBluetooth
 import Foundation
+import ReactiveCocoa
 import ReactiveSwift
 import Result
 
-public class Peripheral {
+public class Peripheral: NSObject {
 	let peripheral: CBPeripheral
 	private let central: CentralManager
 	private let peripheralDelegate: PeripheralObserver
+
+	public let state: Property<CBPeripheralState>
 
 	internal init(peripheral: CBPeripheral,
 	              central: CentralManager
@@ -23,6 +26,21 @@ public class Peripheral {
 		self.peripheralDelegate = PeripheralObserver()
 		self.central = central
 		self.peripheral.delegate = self.peripheralDelegate
+
+		self.state = Property<CBPeripheralState>(initial: CBPeripheralState.disconnected,
+		                                         then: peripheral
+													.reactive
+													.producer(forKeyPath: #keyPath(CBPeripheral.state))
+													.skipNil()
+													.map { CBPeripheralState.init(rawValue: $0 as! Int) }
+													.skipNil()
+			)
+			.skipRepeats()
+
+
+
+
+		super.init()
 	}
 
 	public func connect(options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {

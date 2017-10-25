@@ -14,19 +14,35 @@ public class CentralManager {
 	let central: CBCentralManager
 	let centralDelegate: CentralManagerObserver
 
+	private let didStartScan: Signal<Void, NoError>
 	private let didStopScan: Signal<Void, NoError>
-	private let didStopScanObserver: Signal<Void, NoError>.Observer
 
+	public let isScanning: Property<Bool>
 	public let state: Property<CBManagerState>
 
 	public init(queue: DispatchQueue? = nil,
 	     options: [String: Any]? = nil) {
-		(didStopScan, didStopScanObserver) = Signal.pipe()
 		self.centralDelegate = CentralManagerObserver()
 		let central = CBCentralManager(delegate: centralDelegate,
 		                                queue: queue,
 		                                options: options)
 		self.central = central
+
+		didStartScan = central
+			.reactive
+			.trigger(for: #selector(CBCentralManager.scanForPeripherals(withServices:options:)))
+
+		didStopScan = central
+			.reactive
+			.trigger(for: #selector(CBCentralManager.stopScan))
+
+		isScanning = Property(initial: false,
+		                      then: Signal.merge(
+								didStartScan.map { _ in true},
+								didStopScan.map { _ in false }
+				)
+			)
+			.skipRepeats()
 
 		self.state = Property<CBManagerState>(initial: CBManagerState.unknown,
 		                                      then: centralDelegate
@@ -93,12 +109,8 @@ public class CentralManager {
 
 	/// Stops scan.
 	public func stopScan() -> SignalProducer<Void, NoError> {
-		let producer = SignalProducer<Void, NoError> { observer, _ in
+		let producer = SignalProducer<Void, NoError> {
 			self.central.stopScan()
-			self.didStopScanObserver.send(value: ())
-
-			observer.send(value: ())
-			observer.sendCompleted()
 		}
 
 		return producer

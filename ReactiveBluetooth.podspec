@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name             = 'ReactiveBluetooth'
-	s.version          = '3.0.0-alpha.1'
+	s.version          = '1.0.0-alpha.1'
 	s.summary          = 'ReactiveSwift bindings for CoreBluetooth.'
 
 	s.description      = <<-DESC
@@ -16,4 +16,5 @@ Pod::Spec.new do |s|
 
 	s.source_files = 'ReactiveBluetooth/Classes/**/*'
 	s.dependency 'ReactiveSwift', '3.0.0-alpha.1'
+	s.dependency 'ReactiveCocoa', '	7.0.0-alpha.2'
 end
