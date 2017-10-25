@@ -58,6 +58,17 @@ class ViewController: UIViewController {
 				print(state.description)
 		}
 
+		peripheral
+			.producer
+			.skipNil()
+			.flatMap(.latest) { $0.name.producer }
+			.startWithValues { print($0) }
+
+		centralManager
+			.isScanning
+			.producer
+			.startWithValues { print("isScanning ---- \($0)") }
+
     }
 
     override func didReceiveMemoryWarning() {

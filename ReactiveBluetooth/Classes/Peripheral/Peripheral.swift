@@ -16,16 +16,25 @@ public class Peripheral: NSObject {
 	private let central: CentralManager
 	private let peripheralDelegate: PeripheralObserver
 
+	public let name: Property<String?>
 	public let state: Property<CBPeripheralState>
 
 	internal init(peripheral: CBPeripheral,
 	              central: CentralManager)
 	{
 
+
 		self.peripheral = peripheral
 		self.peripheralDelegate = PeripheralObserver()
 		self.central = central
 		self.peripheral.delegate = self.peripheralDelegate
+
+		self.name = Property<String?>(initial: peripheral.name,
+		                              then: peripheral
+										.reactive
+										.producer(forKeyPath: #keyPath(CBPeripheral.name))
+										.map {$0 as? String }
+		)
 
 		self.state = Property<CBPeripheralState>(initial: CBPeripheralState.disconnected,
 		                                         then: peripheral

@@ -7,6 +7,7 @@
 
 import CoreBluetooth
 import Foundation
+import ReactiveCocoa
 import ReactiveSwift
 import Result
 
@@ -14,7 +15,6 @@ public class CentralManager {
 	let central: CBCentralManager
 	let centralDelegate: CentralManagerObserver
 
-	private let didStartScan: Signal<Void, NoError>
 	private let didStopScan: Signal<Void, NoError>
 
 	public let isScanning: Property<Bool>
@@ -28,19 +28,16 @@ public class CentralManager {
 		                                options: options)
 		self.central = central
 
-		didStartScan = central
-			.reactive
-			.trigger(for: #selector(CBCentralManager.scanForPeripherals(withServices:options:)))
-
 		didStopScan = central
 			.reactive
 			.trigger(for: #selector(CBCentralManager.stopScan))
 
-		isScanning = Property(initial: false,
-		                      then: Signal.merge(
-								didStartScan.map { _ in true},
-								didStopScan.map { _ in false }
-				)
+		isScanning = Property(initial: central.isScanning,
+		                      then: central
+								.reactive
+								.producer(forKeyPath: #keyPath(CBCentralManager.isScanning))
+								.map { $0 as? Bool }
+								.skipNil()
 			)
 			.skipRepeats()
 
@@ -52,8 +49,6 @@ public class CentralManager {
 												.map { DidUpdateStateEvent(event: $0) }
 												.skipNil()
 												.map { $0.central.state })
-
-
 	}
 
 	/// Returns known peripherals by their identifiers.

@@ -49,7 +49,6 @@ public class Service {
 				if let includedServices = event.service.includedServices {
 					let result = includedServices
 						.map { IncludedService(peripheral: self.peripheral,
-						                       parent: self,
 						                       service: $0,
 						                       delegate: self.delegate)
 
@@ -62,7 +61,9 @@ public class Service {
 			}
 
 		let producer = SignalProducer<Void, NSError> {
-				self.peripheral.peripheral.discoverIncludedServices(includedServiceUUID, for: self.service)
+				self.peripheral
+					.peripheral
+					.discoverIncludedServices(includedServiceUUID, for: self.service)
 			}
 			.then(resultProducer)
 
@@ -99,7 +100,9 @@ public class Service {
 		}
 
 		let producer = SignalProducer<Void, NSError> {
-				self.peripheral.peripheral.discoverCharacteristics(characteristicsUUIDs, for: self.service)
+				self.peripheral
+					.peripheral
+					.discoverCharacteristics(characteristicsUUIDs, for: self.service)
 			}
 			.then(resultProducer)
 

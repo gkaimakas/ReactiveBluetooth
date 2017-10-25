@@ -20,6 +20,7 @@ public class Characteristic {
 		return characteristic.uuid
 	}
 
+	/// The current value of the characteristic. It can be used to recieve notifications/updates
 	public let value: Property<Data?>
 
 	init(peripheral: Peripheral,
@@ -32,7 +33,7 @@ public class Characteristic {
 		self.characteristic = characteristic
 		self.delegate = delegate
 
-		self.value = Property<Data?>(initial: nil,
+		self.value = Property<Data?>(initial: characteristic.value,
 		                             then: delegate
 										.events
 										.filter { $0.isDidUpdateValueEvent() }
@@ -74,7 +75,7 @@ public class Characteristic {
 	}
 
 	/// Writes data to the peripheral and awaits a response
-	public func write(data: Data) -> SignalProducer<Data, NSError> {
+	public func write(value data: Data) -> SignalProducer<Data, NSError> {
 		let signal = delegate
 			.events
 			.filter { $0.filter(peripheral: self.peripheral.peripheral) }
@@ -105,14 +106,12 @@ public class Characteristic {
 
 	/// Writes data to the peripheral without awaiting a response
 	public func send(data: Data) -> SignalProducer<Data, NSError> {
-		return SignalProducer<Data, NSError> { observer, _ in
+		return SignalProducer<Void, NSError> {
 			self.peripheral
 				.peripheral
 				.writeValue(data, for: self.characteristic, type: .withoutResponse)
-
-			observer.send(value: data)
-			observer.sendCompleted()
-		}
+			}
+			.map { _ in data }
 	}
 
 	/// Sets notifications or indications for the value of a specified characteristic.
