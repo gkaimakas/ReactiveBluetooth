@@ -8,7 +8,7 @@
 import CoreBluetooth
 import Foundation
 
-internal class DidUpdateStateEvent: CentralBaseEvent {
+class DidUpdateStateEvent: CentralBaseEvent {
 	init?(event: CentralManagerDelegateEvent) {
 		switch event {
 		case .didUpdateState(central: let central):

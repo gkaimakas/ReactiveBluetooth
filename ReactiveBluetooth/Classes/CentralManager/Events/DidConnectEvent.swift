@@ -8,7 +8,7 @@
 import CoreBluetooth
 import Foundation
 
-internal class DidConnectEvent: CentralEvent {
+class DidConnectEvent: CentralEvent {
 	let peripheral: CBPeripheral
 
 	init?(event: CentralManagerDelegateEvent) {

@@ -8,7 +8,7 @@
 import CoreBluetooth
 import Foundation
 
-internal class WillRestoreStateEvent: CentralBaseEvent {
+class WillRestoreStateEvent: CentralBaseEvent {
 	let dict: [String: Any]
 
 	init?(event: CentralManagerDelegateEvent){

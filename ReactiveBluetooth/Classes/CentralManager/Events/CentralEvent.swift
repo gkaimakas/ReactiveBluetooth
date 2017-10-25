@@ -8,7 +8,7 @@
 import CoreBluetooth
 import Foundation
 
-internal class CentralEvent: CentralBaseEvent {
+class CentralEvent: CentralBaseEvent {
 	let error: Error?
 
 	init(central: CBCentralManager, error: Error?) {

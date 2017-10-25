@@ -8,14 +8,14 @@
 import CoreBluetooth
 import Foundation
 
-public enum CentralManagerDelegateEvent {
+enum CentralManagerDelegateEvent {
 	case didUpdateState(central: CBCentralManager)
 	case willRestoreState(central: CBCentralManager, dict: [String: Any])
 	case didDiscover(central: CBCentralManager, peripheral: CBPeripheral, advertismentData: [String: Any], RSSI: NSNumber)
 	case didConnect(central: CBCentralManager, peripheral: CBPeripheral, error: Error?)
 	case didDisconnect(central: CBCentralManager, peripheral: CBPeripheral, error: Error?)
 
-	public func filter(central: CBCentralManager) -> Bool {
+	func filter(central: CBCentralManager) -> Bool {
 		switch self {
 		case .didUpdateState(central: let _central):
 			return central == _central
@@ -30,7 +30,7 @@ public enum CentralManagerDelegateEvent {
 		}
 	}
 
-	public func filter(peripheral: CBPeripheral) -> Bool {
+	func filter(peripheral: CBPeripheral) -> Bool {
 		switch self {
 		case .didUpdateState(central: _),
 		     .willRestoreState(central: _, dict: _):
@@ -44,7 +44,7 @@ public enum CentralManagerDelegateEvent {
 		}
 	}
 
-	public func filter(peripheral identifier: UUID) -> Bool {
+	func filter(peripheral identifier: UUID) -> Bool {
 		switch self {
 		case .didUpdateState(central: _),
 		     .willRestoreState(central: _, dict: _):
@@ -58,7 +58,7 @@ public enum CentralManagerDelegateEvent {
 		}
 	}
 
-	public func isDidUpdateStateEvent() -> Bool {
+	func isDidUpdateStateEvent() -> Bool {
 		switch self {
 		case .didUpdateState(central: _):
 			return true
@@ -67,7 +67,7 @@ public enum CentralManagerDelegateEvent {
 		}
 	}
 
-	public func isWillRestoreStateEvent() -> Bool {
+	func isWillRestoreStateEvent() -> Bool {
 		switch self {
 		case .willRestoreState(central: _, dict: _):
 			return true
@@ -76,7 +76,7 @@ public enum CentralManagerDelegateEvent {
 		}
 	}
 
-	public func isDidDiscoverEvent() -> Bool {
+	func isDidDiscoverEvent() -> Bool {
 		switch self {
 		case .didDiscover(central: _, peripheral: _, advertismentData: _, RSSI: _):
 			return true
@@ -85,7 +85,7 @@ public enum CentralManagerDelegateEvent {
 		}
 	}
 
-	public func isDidConnectEvent() -> Bool {
+	func isDidConnectEvent() -> Bool {
 		switch self {
 		case .didConnect(central: _, peripheral: _, error: _):
 			return true
@@ -94,7 +94,7 @@ public enum CentralManagerDelegateEvent {
 		}
 	}
 
-	public func isDidDisconnectEvent() -> Bool {
+	func isDidDisconnectEvent() -> Bool {
 		switch self {
 		case .didDisconnect(central: _, peripheral: _, error: _):
 			return true

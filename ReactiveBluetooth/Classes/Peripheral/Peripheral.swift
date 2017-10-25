@@ -12,15 +12,15 @@ import ReactiveSwift
 import Result
 
 public class Peripheral: NSObject {
-	let peripheral: CBPeripheral
+	internal let peripheral: CBPeripheral
 	private let central: CentralManager
 	private let peripheralDelegate: PeripheralObserver
 
 	public let state: Property<CBPeripheralState>
 
 	internal init(peripheral: CBPeripheral,
-	              central: CentralManager
-		) {
+	              central: CentralManager)
+	{
 
 		self.peripheral = peripheral
 		self.peripheralDelegate = PeripheralObserver()
@@ -38,21 +38,20 @@ public class Peripheral: NSObject {
 			)
 			.skipRepeats()
 
-
-
-
 		super.init()
 	}
 
+	/// Establishes a local connection to this peripheral
 	public func connect(options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
 		return central.connect(to: self, options: options)
 	}
 
+	/// Cancels an active or pending local connection to this peripheral.
 	public func disconnect() -> SignalProducer<Peripheral, NSError> {
 		return central.cancelPeripheralConnection(from: self)
 	}
 
-	/// Discovers services
+	/// Discovers the specified services of the peripheral.
 	public func discoverServices(_ servicesUUIDs: [CBUUID]? = nil) -> SignalProducer<Service, NSError> {
 
 		let signal = peripheralDelegate
@@ -91,7 +90,7 @@ public class Peripheral: NSObject {
 		return producer
 	}
 
-	/// Reads the peripheral's RSSI
+	/// Retrieves the current RSSI value for the peripheral while it is connected to the central manager.
 	public func readRSSI() -> SignalProducer<NSNumber, NSError> {
 
 		let signal = peripheralDelegate

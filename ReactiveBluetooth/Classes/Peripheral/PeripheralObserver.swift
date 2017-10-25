@@ -11,13 +11,11 @@ import ReactiveSwift
 import Result
 
 class PeripheralObserver: NSObject {
-
 	let events: Signal<PeripheralDelegateEvent, NoError>
 	fileprivate let eventsObserver: Signal<PeripheralDelegateEvent, NoError>.Observer
 
 	override init() {
 		(events, eventsObserver) = Signal.pipe()
-
 		super.init()
 	}
 }

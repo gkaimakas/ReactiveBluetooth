@@ -78,7 +78,7 @@ public class CentralManager {
 		)
 	}
 
-	/// Scans for peripherals with the specified services.
+	/// Scans for peripherals that are advertising the specified services.
 	/// Duplicates are ignored. Please make sure that the central is `poweredOn` before
 	/// calling `scanForPeripherals`
 	public func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?) -> SignalProducer<Peripheral, NoError> {
@@ -107,7 +107,7 @@ public class CentralManager {
 	}
 
 
-	/// Stops scan.
+	/// Asks the central manager to stop scanning for peripherals.
 	public func stopScan() -> SignalProducer<Void, NoError> {
 		let producer = SignalProducer<Void, NoError> {
 			self.central.stopScan()
@@ -116,6 +116,7 @@ public class CentralManager {
 		return producer
 	}
 
+	/// Establishes a local connection to a peripheral.
 	internal func connect(to peripheral: Peripheral,
 	                      options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
 
@@ -146,6 +147,7 @@ public class CentralManager {
 		return producer
 	}
 
+	/// Cancels an active or pending local connection to a peripheral.
 	internal func cancelPeripheralConnection(from peripheral: Peripheral) -> SignalProducer<Peripheral, NSError> {
 
 		let signal = centralDelegate

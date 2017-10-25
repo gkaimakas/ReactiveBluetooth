@@ -8,7 +8,7 @@
 import CoreBluetooth
 import Foundation
 
-internal class DidDiscoverEvent: CentralBaseEvent {
+class DidDiscoverEvent: CentralBaseEvent {
 	let peripheral: CBPeripheral
 	let advertismentData: [String: Any]
 	let RSSI: NSNumber

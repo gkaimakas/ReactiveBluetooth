@@ -11,11 +11,10 @@ import ReactiveSwift
 import Result
 
 public class Service {
-
 	private let peripheral: Peripheral
 	private let delegate: PeripheralObserver
 	
-	let service: CBService
+	internal let service: CBService
 
 	public var uuid: CBUUID {
 		return service.uuid
@@ -30,6 +29,7 @@ public class Service {
 		self.delegate = delegate
 	}
 
+	/// Discovers the specified included services of a service.
 	public func discoverIncludedServices( _ includedServiceUUID: [CBUUID]? = nil) -> SignalProducer<IncludedService, NSError> {
 		let signal = delegate
 			.events
@@ -69,6 +69,7 @@ public class Service {
 		return producer
 	}
 
+	/// Discovers the specified characteristics of a service.
 	public func discoverCharacteristics(_ characteristicsUUIDs: [CBUUID]? = nil) -> SignalProducer<Characteristic, NSError> {
 		let signal = delegate
 			.events
