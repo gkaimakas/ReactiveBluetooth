@@ -7,21 +7,29 @@
 
 import CoreBluetooth
 import Foundation
+import ReactiveCocoa
 import ReactiveSwift
 import Result
 
 public class Characteristic {
 	let peripheral: Peripheral
-	let service: Service
 	let characteristic: CBCharacteristic
 	let delegate: PeripheralObserver
 
-	public var uuid: CBUUID {
-		return characteristic.uuid
-	}
+	/// The Bluetooth-specific UUID of the attribute.
+	public let uuid: Property<CBUUID>
 
-	/// The current value of the characteristic. It can be used to recieve notifications/updates
+	/// The service that this characteristic belongs to.
+	public let service: Service
+
+	/// The value of the characteristic. It can be used to recieve notifications/updates
 	public let value: Property<Data?>
+
+	/// The properties of the characteristic.
+	public let properties: Property<CBCharacteristicProperties>
+
+	/// A Boolean property indicating whether the characteristic is currently notifying a subscribed central of its value.
+	public let isNotifying: Property<Bool>
 
 	init(peripheral: Peripheral,
 	     service: Service,
@@ -41,6 +49,16 @@ public class Characteristic {
 										.filter { $0.filter(characteristic: characteristic.uuid) }
 										.map { DidUpdateValueEvent(event: $0) }
 										.map { $0?.characteristic.value }
+		)
+
+		self.uuid = Property<CBUUID>(value: characteristic.uuid)
+		self.properties = Property(value: characteristic.properties)
+		self.isNotifying = Property<Bool>(initial: characteristic.isNotifying,
+		                                  then: characteristic
+											.reactive
+											.signal(forKeyPath: #keyPath(CBCharacteristic.isNotifying))
+											.map { $0 as? Bool }
+											.skipNil()
 		)
 	}
 

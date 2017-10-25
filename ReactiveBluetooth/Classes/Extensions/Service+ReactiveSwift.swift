@@ -16,11 +16,11 @@ public extension Signal where Value: Service {
 	}
 
 	func filter(service: CBUUID) -> Signal<Value, Error> {
-		return self.filter { $0.uuid.isEqual(service) }
+		return self.filter { $0.uuid.value.isEqual(service) }
 	}
 
 	func filter(service: String) -> Signal<Value, Error> {
-		return self.filter { $0.uuid.uuidString == service }
+		return self.filter { $0.uuid.value.uuidString == service }
 	}
 }
 

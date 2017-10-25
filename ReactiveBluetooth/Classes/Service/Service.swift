@@ -14,14 +14,14 @@ public class Service {
 	internal let delegate: PeripheralObserver
 	internal let service: CBService
 
+	/// The Bluetooth-specific UUID of the attribute.
+	public let uuid: Property<CBUUID>
+
+	/// The peripheral to which this service belongs.
 	public let peripheral: Peripheral
+
+	/// A Boolean property indicating whether the type of service is primary or secondary.
 	public let isPrimary: Property<Bool>
-
-	public private(set) var includedServices: Set<Service>
-
-	public var uuid: CBUUID {
-		return service.uuid
-	}
 
 	internal init(peripheral: Peripheral,
 	              service: CBService,
@@ -31,9 +31,8 @@ public class Service {
 		self.service = service
 		self.delegate = delegate
 
+		self.uuid = Property<CBUUID>(value: service.uuid)
 		self.isPrimary = Property<Bool>(value: service.isPrimary)
-
-		self.includedServices = Set<Service>()
 	}
 
 	/// Discovers the specified included services of a service.
@@ -123,8 +122,7 @@ extension Service: Hashable {
 	}
 
 	public static func ==(lhs: Service, rhs: Service) -> Bool {
-		return lhs.uuid.uuidString == rhs.uuid.uuidString
+		return lhs.uuid.value == rhs.uuid.value
 			&& lhs.service == rhs.service
 	}
-
 }

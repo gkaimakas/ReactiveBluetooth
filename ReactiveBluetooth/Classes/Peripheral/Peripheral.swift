@@ -25,7 +25,6 @@ public class Peripheral: NSObject {
 	              central: CentralManager)
 	{
 
-
 		self.peripheral = peripheral
 		self.peripheralDelegate = PeripheralObserver()
 		self.central = central

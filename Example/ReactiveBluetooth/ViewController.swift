@@ -41,7 +41,6 @@ class ViewController: UIViewController {
 			.flatMap(.concat) { _service -> SignalProducer<Characteristic, NSError> in
 				return _service.discoverCharacteristics()
 			}
-			.map { $0.uuid.uuidString }
 			.then(centralManager.stopScan())
 			.then(self.peripheral
 				.producer
