@@ -8,7 +8,7 @@
 import CoreBluetooth
 import Foundation
 
-enum CentralManagerDelegateEvent {
+internal enum CentralManagerDelegateEvent {
 	case didUpdateState(central: CBCentralManager)
 	case willRestoreState(central: CBCentralManager, dict: [String: Any])
 	case didDiscover(central: CBCentralManager, peripheral: CBPeripheral, advertismentData: [String: Any], RSSI: NSNumber)
@@ -31,17 +31,7 @@ enum CentralManagerDelegateEvent {
 	}
 
 	func filter(peripheral: CBPeripheral) -> Bool {
-		switch self {
-		case .didUpdateState(central: _),
-		     .willRestoreState(central: _, dict: _):
-			return false
-		case .didDiscover(central: _, peripheral: let _peripheral, advertismentData: _, RSSI: _):
-			return peripheral == _peripheral
-		case .didConnect(central: _, peripheral: let _peripheral, error: _):
-			return peripheral == _peripheral
-		case .didDisconnect(central: _, peripheral: let _peripheral, error: _):
-			return peripheral == _peripheral
-		}
+		return filter(peripheral: peripheral.identifier)
 	}
 
 	func filter(peripheral identifier: UUID) -> Bool {

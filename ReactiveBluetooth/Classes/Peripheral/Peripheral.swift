@@ -31,10 +31,12 @@ public class Peripheral: NSObject {
 		self.peripheral.delegate = self.peripheralDelegate
 
 		self.name = Property<String?>(initial: peripheral.name,
-		                              then: peripheral
-										.reactive
-										.producer(forKeyPath: #keyPath(CBPeripheral.name))
-										.map {$0 as? String }
+		                              then: peripheralDelegate
+										.events
+										.filter { $0.filter(peripheral: peripheral) }
+										.filter { $0.isDidUpdateNameEvent() }
+										.map { DidUpdateNameEvent(event: $0) }
+										.map { $0?.peripheral.name }
 		)
 
 		self.identifier = Property<UUID>(value: peripheral.identifier)

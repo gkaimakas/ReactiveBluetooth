@@ -60,6 +60,12 @@ class ViewController: UIViewController {
 		peripheral
 			.producer
 			.skipNil()
+			.flatMap(.latest) { $0.readRSSI() }
+			
+
+		peripheral
+			.producer
+			.skipNil()
 			.flatMap(.latest) { $0.name.producer }
 			.startWithValues { print($0) }
 
