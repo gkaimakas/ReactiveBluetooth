@@ -17,7 +17,9 @@ public class Peripheral: NSObject {
 	private let peripheralDelegate: PeripheralObserver
 
 	public let name: Property<String?>
+	public let identifier: Property<UUID>
 	public let state: Property<CBPeripheralState>
+	public let canSendWriteWithoutResponse: Property<Bool>
 
 	internal init(peripheral: CBPeripheral,
 	              central: CentralManager)
@@ -36,6 +38,8 @@ public class Peripheral: NSObject {
 										.map {$0 as? String }
 		)
 
+		self.identifier = Property<UUID>(value: peripheral.identifier)
+
 		self.state = Property<CBPeripheralState>(initial: CBPeripheralState.disconnected,
 		                                         then: peripheral
 													.reactive
@@ -46,6 +50,9 @@ public class Peripheral: NSObject {
 													.skipNil()
 			)
 			.skipRepeats()
+
+		self.canSendWriteWithoutResponse = Property<Bool>(value: peripheral.canSendWriteWithoutResponse)
+
 
 		super.init()
 	}

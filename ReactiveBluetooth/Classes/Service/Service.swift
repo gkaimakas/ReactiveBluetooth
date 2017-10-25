@@ -11,10 +11,13 @@ import ReactiveSwift
 import Result
 
 public class Service {
-	private let peripheral: Peripheral
-	private let delegate: PeripheralObserver
-	
+	internal let delegate: PeripheralObserver
 	internal let service: CBService
+
+	public let peripheral: Peripheral
+	public let isPrimary: Property<Bool>
+
+	public private(set) var includedServices: Set<Service>
 
 	public var uuid: CBUUID {
 		return service.uuid
@@ -27,6 +30,10 @@ public class Service {
 		self.peripheral = peripheral
 		self.service = service
 		self.delegate = delegate
+
+		self.isPrimary = Property<Bool>(value: service.isPrimary)
+
+		self.includedServices = Set<Service>()
 	}
 
 	/// Discovers the specified included services of a service.
@@ -108,4 +115,16 @@ public class Service {
 
 		return producer
 	}
+}
+
+extension Service: Hashable {
+	public var hashValue: Int {
+		return service.hashValue
+	}
+
+	public static func ==(lhs: Service, rhs: Service) -> Bool {
+		return lhs.uuid.uuidString == rhs.uuid.uuidString
+			&& lhs.service == rhs.service
+	}
+
 }
