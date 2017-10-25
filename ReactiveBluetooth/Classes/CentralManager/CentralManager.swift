@@ -40,8 +40,31 @@ public class CentralManager {
 
 	}
 
+	/// Returns known peripherals by their identifiers.
+	public func retrievePeripherals(withIdentifiers identifiers: [UUID]) -> SignalProducer<[Peripheral], NoError> {
+		return SignalProducer(value: central
+			.retrievePeripherals(withIdentifiers: identifiers)
+			.map { Peripheral(peripheral: $0,
+			                  central: self)
+			}
+		)
+	}
+
+	/// Returns a list of the peripherals (containing any of the specified services) currently
+	/// connected to the system.
+	public func retrieveConnectedPeripherals(withServices services: [CBUUID]) -> SignalProducer<[Peripheral], NoError> {
+
+		return SignalProducer(value: central
+			.retrieveConnectedPeripherals(withServices: services)
+			.map { Peripheral(peripheral: $0,
+			                  central: self)
+			}
+		)
+	}
+
 	/// Scans for peripherals with the specified services.
-	/// Duplicates are ignored. Please make sure that the central is `poweredOn` before calling `scanForPeripherals`
+	/// Duplicates are ignored. Please make sure that the central is `poweredOn` before
+	/// calling `scanForPeripherals`
 	public func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?) -> SignalProducer<Peripheral, NoError> {
 
 		let signal = centralDelegate

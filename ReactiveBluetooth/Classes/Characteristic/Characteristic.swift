@@ -11,8 +11,8 @@ import ReactiveSwift
 import Result
 
 public class Characteristic {
-	let peripheral: CBPeripheral
-	let service: CBService
+	let peripheral: Peripheral
+	let service: Service
 	let characteristic: CBCharacteristic
 	let delegate: PeripheralObserver
 
@@ -22,8 +22,8 @@ public class Characteristic {
 
 	public let value: Property<Data?>
 
-	init(peripheral: CBPeripheral,
-	     service: CBService,
+	init(peripheral: Peripheral,
+	     service: Service,
 	     characteristic: CBCharacteristic,
 	     delegate: PeripheralObserver) {
 
@@ -35,7 +35,7 @@ public class Characteristic {
 		self.value = Property<Data?>(initial: nil, then: delegate
 			.events
 			.filter { $0.isDidUpdateValueEvent() }
-			.filter { $0.filter(peripheral: peripheral) }
+			.filter { $0.filter(peripheral: peripheral.peripheral) }
 			.filter { $0.filter(characteristic: characteristic.uuid) }
 			.map { DidUpdateValueEvent(event: $0) }
 			.map { $0?.characteristic.value }
@@ -45,7 +45,7 @@ public class Characteristic {
 	public func readValue() -> SignalProducer<Data?, NSError> {
 		let signal = delegate
 			.events
-			.filter { $0.filter(peripheral: self.peripheral) }
+			.filter { $0.filter(peripheral: self.peripheral.peripheral) }
 			.filter { $0.filter(characteristic: self.characteristic.uuid) }
 			.filter { $0.isDidUpdateValueEvent() }
 			.map { DidUpdateValueEvent(event: $0) }
@@ -62,7 +62,9 @@ public class Characteristic {
 			}
 
 		let producer = SignalProducer<Void, NSError> {
-				self.peripheral.readValue(for: self.characteristic)
+				self.peripheral
+					.peripheral
+					.readValue(for: self.characteristic)
 			}
 			.then(resultProducer)
 
@@ -73,7 +75,7 @@ public class Characteristic {
 	public func write(data: Data) -> SignalProducer<Data, NSError> {
 		let signal = delegate
 			.events
-			.filter { $0.filter(peripheral: self.peripheral) }
+			.filter { $0.filter(peripheral: self.peripheral.peripheral) }
 			.filter { $0.filter(characteristic: self.characteristic.uuid) }
 			.filter { $0.isDidWriteValueEvent() }
 			.map { DidWriteValueEvent(event: $0) }
@@ -90,7 +92,9 @@ public class Characteristic {
 			}
 
 		let producer = SignalProducer<Void, NSError> {
-				self.peripheral.writeValue(data, for: self.characteristic, type: .withResponse)
+				self.peripheral
+					.peripheral
+					.writeValue(data, for: self.characteristic, type: .withResponse)
 			}
 			.then(resultProducer)
 
@@ -100,7 +104,10 @@ public class Characteristic {
 	/// Writes data to the peripheral without awaiting a response
 	public func send(data: Data) -> SignalProducer<Data, NSError> {
 		return SignalProducer<Data, NSError> { observer, _ in
-			self.peripheral.writeValue(data, for: self.characteristic, type: .withoutResponse)
+			self.peripheral
+				.peripheral
+				.writeValue(data, for: self.characteristic, type: .withoutResponse)
+
 			observer.send(value: data)
 			observer.sendCompleted()
 		}
@@ -110,7 +117,7 @@ public class Characteristic {
 		let signal = delegate
 			.events
 			.filter { $0.isDidUpdateNotificationStateEvent() }
-			.filter { $0.filter(peripheral: self.peripheral) }
+			.filter { $0.filter(peripheral: self.peripheral.peripheral) }
 			.filter { $0.filter(characteristic: self.characteristic) }
 			.map { DidUpdateNotificationStateEvent(event: $0) }
 			.skipNil()
@@ -126,7 +133,9 @@ public class Characteristic {
 			}
 
 		let producer = SignalProducer<Void, NSError> {
-				self.peripheral.setNotifyValue(enabled, for: self.characteristic)
+				self.peripheral
+					.peripheral
+					.setNotifyValue(enabled, for: self.characteristic)
 			}
 			.then(resultProducer)
 

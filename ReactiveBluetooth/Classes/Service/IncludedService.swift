@@ -11,4 +11,16 @@ import ReactiveSwift
 import Result
 
 public class IncludedService: Service {
+	private let parent: Service
+
+	internal init(peripheral: Peripheral,
+	                       parent: Service,
+	                       service: CBService,
+	                       delegate: PeripheralObserver) {
+		self.parent = parent
+
+		super.init(peripheral: peripheral,
+		           service: service,
+		           delegate: delegate)
+	}
 }

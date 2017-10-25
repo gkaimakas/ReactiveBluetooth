@@ -12,7 +12,7 @@ import Result
 
 public class Service {
 
-	private let peripheral: CBPeripheral
+	private let peripheral: Peripheral
 	private let service: CBService
 	private let delegate: PeripheralObserver
 
@@ -20,7 +20,7 @@ public class Service {
 		return service.uuid
 	}
 
-	internal init(peripheral: CBPeripheral,
+	internal init(peripheral: Peripheral,
 	              service: CBService,
 	              delegate: PeripheralObserver) {
 
@@ -29,11 +29,11 @@ public class Service {
 		self.delegate = delegate
 	}
 
-	public func discoverIncludedServices( _ includedServiceUUID: [CBUUID]?) -> SignalProducer<IncludedService, NSError> {
+	public func discoverIncludedServices( _ includedServiceUUID: [CBUUID]? = nil) -> SignalProducer<IncludedService, NSError> {
 		let signal = delegate
 			.events
 			.filter { $0.isDidDiscoverIncludedServicesEvent() }
-			.filter { $0.filter(peripheral: self.peripheral) }
+			.filter { $0.filter(peripheral: self.peripheral.peripheral) }
 			.filter { $0.filter(service: self.service.uuid) }
 			.map { DidDiscoverIncludedServicesEvent(event: $0) }
 			.skipNil()
@@ -48,6 +48,7 @@ public class Service {
 				if let includedServices = event.service.includedServices {
 					let result = includedServices
 						.map { IncludedService(peripheral: self.peripheral,
+						                       parent: self,
 						                       service: $0,
 						                       delegate: self.delegate)
 
@@ -60,18 +61,18 @@ public class Service {
 			}
 
 		let producer = SignalProducer<Void, NSError> {
-				self.peripheral.discoverIncludedServices(includedServiceUUID, for: self.service)
+				self.peripheral.peripheral.discoverIncludedServices(includedServiceUUID, for: self.service)
 			}
 			.then(resultProducer)
 
 		return producer
 	}
 
-	public func discoverCharacteristics(_ characteristicsUUIDs: [CBUUID]?) -> SignalProducer<Characteristic, NSError> {
+	public func discoverCharacteristics(_ characteristicsUUIDs: [CBUUID]? = nil) -> SignalProducer<Characteristic, NSError> {
 		let signal = delegate
 			.events
 			.filter { $0.isDidDiscoverCharacteristicsEvent() }
-			.filter { $0.filter(peripheral: self.peripheral) }
+			.filter { $0.filter(peripheral: self.peripheral.peripheral) }
 			.filter { $0.filter(service: self.service.uuid) }
 			.map { DidDiscoverCharacteristicsEvent(event: $0) }
 			.skipNil()
@@ -86,7 +87,7 @@ public class Service {
 				if let characteristics = event.service.characteristics {
 					let result = characteristics
 						.map { Characteristic(peripheral: self.peripheral,
-						                      service: self.service,
+						                      service: self,
 						                      characteristic: $0,
 						                      delegate: self.delegate) }
 					return SignalProducer(result)
@@ -96,7 +97,7 @@ public class Service {
 		}
 
 		let producer = SignalProducer<Void, NSError> {
-				self.peripheral.discoverCharacteristics(characteristicsUUIDs, for: self.service)
+				self.peripheral.peripheral.discoverCharacteristics(characteristicsUUIDs, for: self.service)
 			}
 			.then(resultProducer)
 

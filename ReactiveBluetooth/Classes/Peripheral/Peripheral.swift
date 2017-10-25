@@ -34,7 +34,7 @@ public class Peripheral {
 	}
 
 	/// Discovers services
-	public func discoverServices(_ servicesUUIDs: [CBUUID]?) -> SignalProducer<Service, NSError> {
+	public func discoverServices(_ servicesUUIDs: [CBUUID]? = nil) -> SignalProducer<Service, NSError> {
 
 		let signal = peripheralDelegate
 			.events
@@ -52,7 +52,7 @@ public class Peripheral {
 
 				if let services = event.peripheral.services {
 					let result = services
-						.map { Service(peripheral: self.peripheral,
+						.map { Service(peripheral: self,
 						               service: $0,
 						               delegate: self.peripheralDelegate)
 							
