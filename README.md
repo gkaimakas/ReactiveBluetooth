@@ -5,6 +5,10 @@
 [![License](https://img.shields.io/cocoapods/l/ReactiveBluetooth.svg?style=flat)](http://cocoapods.org/pods/ReactiveBluetooth)
 [![Platform](https://img.shields.io/cocoapods/p/ReactiveBluetooth.svg?style=flat)](http://cocoapods.org/pods/ReactiveBluetooth)
 
+ReactiveBluetooth tries to simpify BLE communications for iOS devices using `ReactiveSwift`.
+
+Currently it supports only characteristics.
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
