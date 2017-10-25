@@ -55,12 +55,7 @@ class ViewController: UIViewController {
 			.skipNil()
 			.flatMap(.latest) { $0.state.producer }
 			.startWithValues { state in
-				switch state {
-				case .connected: print("connected")
-				case .connecting: print("connecting")
-				case .disconnected: print("disconnected")
-				case .disconnecting: print("disconnecting")
-				}
+				print(state.description)
 		}
 
     }

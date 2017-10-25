@@ -31,8 +31,9 @@ public class Peripheral: NSObject {
 		                                         then: peripheral
 													.reactive
 													.producer(forKeyPath: #keyPath(CBPeripheral.state))
+													.map { $0 as? Int }
 													.skipNil()
-													.map { CBPeripheralState.init(rawValue: $0 as! Int) }
+													.map { CBPeripheralState.init(rawValue: $0) }
 													.skipNil()
 			)
 			.skipRepeats()
