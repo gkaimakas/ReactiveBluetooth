@@ -11,13 +11,26 @@ import ReactiveSwift
 import Result
 
 public class Peripheral {
-	private let peripheral: CBPeripheral
+	let peripheral: CBPeripheral
+	private let central: CentralManager
 	private let peripheralDelegate: PeripheralObserver
 
-	internal init(peripheral: CBPeripheral) {
+	internal init(peripheral: CBPeripheral,
+	              central: CentralManager
+		) {
+
 		self.peripheral = peripheral
 		self.peripheralDelegate = PeripheralObserver()
+		self.central = central
 		self.peripheral.delegate = self.peripheralDelegate
+	}
+
+	public func connect(options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
+		return central.connect(to: self, options: options)
+	}
+
+	public func disconnect() -> SignalProducer<Peripheral, NSError> {
+		return central.cancelPeripheralConnection(from: self)
 	}
 
 	/// Discovers services

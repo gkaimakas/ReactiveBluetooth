@@ -8,7 +8,7 @@
 import CoreBluetooth
 import Foundation
 
-internal class DidUpdateNameEvent: BasePeripheralEvent {
+internal class DidUpdateNameEvent: PeripheralBaseEvent {
 	init?(event: PeripheralDelegateEvent) {
 		switch event {
 		case .didUpdateName(peripheral: let peripheral):

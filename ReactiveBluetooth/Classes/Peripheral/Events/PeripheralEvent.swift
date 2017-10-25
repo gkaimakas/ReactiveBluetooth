@@ -8,7 +8,7 @@
 import CoreBluetooth
 import Foundation
 
-internal class PeripheralEvent: BasePeripheralEvent {
+internal class PeripheralEvent: PeripheralBaseEvent {
 	let error: Error?
 
 	init(peripheral: CBPeripheral,
