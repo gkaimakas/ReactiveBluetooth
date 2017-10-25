@@ -13,8 +13,9 @@ import Result
 public class Service {
 
 	private let peripheral: Peripheral
-	private let service: CBService
 	private let delegate: PeripheralObserver
+	
+	let service: CBService
 
 	public var uuid: CBUUID {
 		return service.uuid
