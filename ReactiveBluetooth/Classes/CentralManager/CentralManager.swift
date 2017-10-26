@@ -16,7 +16,7 @@ public class CentralManager {
 	let delegate: CentralManagerObserver
 	let didStopScan: Signal<Void, NoError>
 	let weakDiscoveredPeripheralCache: SyncDiscoveredPeripheralCache
-	let discoveredPeripheralsSignal: Signal<DiscoveredPeripheral, NoError>
+	let didDiscoverPeripheral: Signal<DiscoveredPeripheral, NoError>
 
 	public let isScanning: Property<Bool>
 	public let state: Property<CBManagerState>
@@ -56,7 +56,7 @@ public class CentralManager {
 												.skipNil()
 												.map { $0.central.state })
 
-		discoveredPeripheralsSignal = delegate
+		didDiscoverPeripheral = delegate
 			.events
 			.filter { $0.filter(central: central) }
 			.filter { $0.isDidDiscoverEvent() }
@@ -75,7 +75,7 @@ public class CentralManager {
 		// It should be thread safe ()
 		weakDiscoveredPeripheralCache
 			.reactive
-			.synchronizeDiscoveredPeripherals <~ discoveredPeripheralsSignal
+			.synchronizeDiscoveredPeripherals <~ didDiscoverPeripheral
 
 		_self = self
 	}
@@ -106,7 +106,7 @@ public class CentralManager {
 	/// Duplicates are ignored. Please make sure that the central is `poweredOn` before
 	/// calling `scanForPeripherals`
 	public func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?) -> SignalProducer<DiscoveredPeripheral, NoError> {
-		let resultProducer = SignalProducer(discoveredPeripheralsSignal)
+		let resultProducer = SignalProducer(didDiscoverPeripheral)
 		
 		let producer = SignalProducer<Void, NoError> {
 				self.central.scanForPeripherals(withServices: serviceUUIDs, options: [
