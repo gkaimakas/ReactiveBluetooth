@@ -16,6 +16,18 @@ public class Peripheral {
 	private let central: CentralManager
 	let delegate: PeripheralObserver
 
+	/// Establishes a local connection to this peripheral
+	fileprivate let _connect: Action<[String: Any]?, Peripheral, NSError>
+
+	/// Cancels an active or pending local connection to this peripheral.
+	fileprivate let _disconnect: Action<Void, Peripheral, NSError>
+
+	/// Discovers the specified services of the peripheral.
+	fileprivate let _discoverServices: Action<[CBUUID]?, Service, NSError>
+
+	/// Retrieves the current RSSI value for the peripheral while it is connected to the central manager.
+	fileprivate let _readRSSI: Action<Void, NSNumber, NSError>
+
 	/// The name of the peripheral.
 	public let name: Property<String?>
 
@@ -27,18 +39,6 @@ public class Peripheral {
 
 	/// A list of services on the peripheral that have been discovered.
 	public let services: Property<Set<Service>>
-
-	/// Establishes a local connection to this peripheral
-	public let connect: Action<[String: Any]?, Peripheral, NSError>
-
-	/// Cancels an active or pending local connection to this peripheral.
-	public let disconnect: Action<Void, Peripheral, NSError>
-
-	/// Discovers the specified services of the peripheral.
-	public let discoverServices: Action<[CBUUID]?, Service, NSError>
-
-	/// Retrieves the current RSSI value for the peripheral while it is connected to the central manager.
-	public let readRSSI: Action<Void, NSNumber, NSError>
 
 	public let canSendWriteWithoutResponse: Property<Bool>
 
@@ -90,32 +90,32 @@ public class Peripheral {
 
 		self.canSendWriteWithoutResponse = Property<Bool>(value: peripheral.canSendWriteWithoutResponse)
 
-		self.connect = Action(execute: { options in _self._connect(options: options) })
+		self._connect = Action(execute: { options in _self.connect(options: options) })
 
-		self.disconnect = Action(enabledIf: state.isConnecting.or(state.isConnected),
-		                         execute: { _ in _self._disconnect() })
+		self._disconnect = Action(enabledIf: state.isConnecting.or(state.isConnected),
+		                         execute: { _ in _self.disconnect() })
 
-		self.discoverServices = Action(enabledIf: state.isConnected,
-		                               execute: { uuids in _self._discoverServices(uuids) })
+		self._discoverServices = Action(enabledIf: state.isConnected,
+		                               execute: { uuids in _self.discoverServices(uuids) })
 
-		self.readRSSI = Action(enabledIf: state.isConnected,
-		                       execute: { _ in _self._readRSSI() })
+		self._readRSSI = Action(enabledIf: state.isConnected,
+		                       execute: { _ in _self.readRSSI() })
 		
 		_self = self
 	}
 
 	/// Establishes a local connection to this peripheral
-	fileprivate func _connect(options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
+	public func connect(options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
 		return central.connect(to: self, options: options)
 	}
 
 	/// Cancels an active or pending local connection to this peripheral.
-	fileprivate func _disconnect() -> SignalProducer<Peripheral, NSError> {
+	public func disconnect() -> SignalProducer<Peripheral, NSError> {
 		return central.cancelPeripheralConnection(from: self)
 	}
 
 	/// Discovers the specified services of the peripheral.
-	fileprivate func _discoverServices(_ servicesUUIDs: [CBUUID]? = nil) -> SignalProducer<Service, NSError> {
+	public func discoverServices(_ servicesUUIDs: [CBUUID]? = nil) -> SignalProducer<Service, NSError> {
 
 		let signal = delegate
 			.events
@@ -154,7 +154,7 @@ public class Peripheral {
 	}
 
 	/// Retrieves the current RSSI value for the peripheral while it is connected to the central manager.
-	fileprivate func _readRSSI() -> SignalProducer<NSNumber, NSError> {
+	public func readRSSI() -> SignalProducer<NSNumber, NSError> {
 
 		let signal = delegate
 			.events
@@ -196,28 +196,28 @@ extension Peripheral: Hashable {
 
 // MARK: - NonBlocking
 
-extension Peripheral: NonBlockingProvider {}
+extension Peripheral: ActionableProvider {}
 
-public extension NonBlocking where Base: Peripheral {
+public extension Actionable where Base: Peripheral {
 
 	/// Establishes a local connection to this peripheral
-	public func connect(options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
-		return base._connect(options: options)
+	public var connect: Action<[String: Any]?, Peripheral, NSError> {
+		return base._connect
 	}
 
 	/// Cancels an active or pending local connection to this peripheral.
-	public func disconnect() -> SignalProducer<Peripheral, NSError> {
-		return base._disconnect()
+	public var disconnect: Action<Void, Peripheral, NSError> {
+		return base._disconnect
 	}
 
 	/// Discovers the specified services of the peripheral.
-	public func discoverServices(_ servicesUUIDs: [CBUUID]? = nil) -> SignalProducer<Service, NSError> {
-		return base._discoverServices(servicesUUIDs)
+	public var discoverServices: Action<[CBUUID]?, Service, NSError> {
+		return base._discoverServices
 	}
 
 	/// Retrieves the current RSSI value for the peripheral while it is connected to the central manager.
-	public func readRSSI() -> SignalProducer<NSNumber, NSError> {
-		return base._readRSSI()
+	public var readRSSI: Action<Void, NSNumber, NSError> {
+		return base._readRSSI
 	}
 
 }

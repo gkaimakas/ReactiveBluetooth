@@ -16,6 +16,12 @@ public class Descriptor {
 	let delegate: PeripheralObserver
 	let descriptor: CBDescriptor
 
+	/// Retrieves the value of the descriptor.
+	fileprivate let _readValue: Action<Void, Any?, NSError>
+
+	/// Writes the value of the descriptor.
+	fileprivate let _writeValue: Action<Data, Any?, NSError>
+
 	public let characteristic: Characteristic
 
 	/// The Bluetooth-specific UUID of the attribute.
@@ -23,12 +29,6 @@ public class Descriptor {
 
 	/// The value of the descriptor.
 	public let value: Property<Any?>
-
-	/// Retrieves the value of the descriptor.
-	public let readValue: Action<Void, Any?, NSError>
-
-	/// Writes the value of the descriptor.
-	public let writeValue: Action<Data, Any?, NSError>
 
 	internal init(peripheral: Peripheral,
 	              characteristic: Characteristic,
@@ -50,17 +50,17 @@ public class Descriptor {
 								.producer(forKeyPath: #keyPath(CBDescriptor.value))
 		)
 
-		self.readValue = Action(enabledIf: peripheral.state.isConnected,
-		                        execute: { _ in _self._readValue() })
+		self._readValue = Action(enabledIf: peripheral.state.isConnected,
+		                        execute: { _ in _self.readValue() })
 
-		self.writeValue = Action(enabledIf: peripheral.state.isConnected,
-		                        execute: { data in _self._write(value: data) })
+		self._writeValue = Action(enabledIf: peripheral.state.isConnected,
+		                        execute: { data in _self.write(value: data) })
 
 		_self = self
 	}
 
 	/// Retrieves the value of the characteristic descriptor.
-	fileprivate func _readValue() -> SignalProducer<Any?, NSError> {
+	public func readValue() -> SignalProducer<Any?, NSError> {
 		let signal = delegate
 			.events
 			.filter { $0.filter(peripheral: self.peripheral.peripheral) }
@@ -89,7 +89,7 @@ public class Descriptor {
 	}
 
 	/// Writes the value of a characteristic descriptor.
-	fileprivate func _write(value data: Data) -> SignalProducer<Any?, NSError> {
+	public func write(value data: Data) -> SignalProducer<Any?, NSError> {
 		let signal = delegate
 			.events
 			.filter { $0.filter(peripheral: self.peripheral.peripheral) }
@@ -133,17 +133,17 @@ extension Descriptor: Hashable {
 
 // MARK: - NonBlocking
 
-extension Descriptor: NonBlockingProvider {}
+extension Descriptor: ActionableProvider {}
 
-public extension NonBlocking where Base: Descriptor {
+public extension Actionable where Base: Descriptor {
 	/// Retrieves the value of the characteristic descriptor.
-	public func readValue() -> SignalProducer<Any?, NSError> {
-		return base._readValue()
+	public var readValue: Action<Void, Any?, NSError> {
+		return base._readValue
 	}
 
 	/// Writes the value of a characteristic descriptor.
-	public func write(value data: Data) -> SignalProducer<Any?, NSError> {
-		return base._write(value: data)
+	public var writeValue: Action<Data, Any?, NSError> {
+		return base._writeValue
 	}
 }
 

@@ -32,6 +32,7 @@ class ViewController: UIViewController {
 			.promoteError(NSError.self)
 			.filter { $0 == CBManagerState.poweredOn }
 			.flatMap(.latest) { _ in return self.centralManager.scanForPeripherals(withServices: nil) }
+			.map { $0.peripheral }
 			.take(first: 1)
 
 		disposable += peripheral <~ producer
@@ -51,13 +52,12 @@ class ViewController: UIViewController {
 
 
 		disposable += producer
-			.flatMap(.latest) { _peripheral -> SignalProducer<Peripheral, NSError> in _peripheral.nonBlocking.connect() }
+			.flatMap(.latest) { _peripheral -> SignalProducer<Peripheral, NSError> in _peripheral.connect() }
 			.flatMap(.merge) { _peripheral -> SignalProducer<Characteristic, NSError> in
 				return _peripheral
-					.nonBlocking
 					.discoverServices()
 					.on(value: { print("Service", $0.uuid.value.uuidString) })
-					.flatMap(.merge) { $0.nonBlocking.discoverCharacteristics() }
+					.flatMap(.merge) { $0.discoverCharacteristics() }
 					.on(value: { print("Characterstic", $0.uuid.value.uuidString, $0.service.uuid.value.uuidString) })
 			}
 			.then(centralManager.stopScan())
@@ -88,8 +88,8 @@ class ViewController: UIViewController {
 					.producer
 					.skipNil()
 					.promoteError(NSError.self)
-					.flatMap(.latest) { peripheral -> SignalProducer<Service, NSError> in return peripheral.nonBlocking.discoverServices() }
-					.flatMap(.latest) { service -> SignalProducer<Characteristic, NSError> in return service.nonBlocking.discoverCharacteristics() }
+					.flatMap(.latest) { peripheral -> SignalProducer<Service, NSError> in return peripheral.discoverServices() }
+					.flatMap(.latest) { service -> SignalProducer<Characteristic, NSError> in return service.discoverCharacteristics() }
 				}
 			}
 

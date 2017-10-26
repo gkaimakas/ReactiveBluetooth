@@ -16,6 +16,21 @@ public class Characteristic {
 	let characteristic: CBCharacteristic
 	let delegate: PeripheralObserver
 
+	/// Discovers the descriptors of the characteristic.
+	fileprivate let _discoverDescriptors: Action<Void, Descriptor, NSError>
+
+	/// Retrieves the value of the characteristic.
+	fileprivate let _readValue: Action<Void, Data?, NSError>
+
+	/// Writes data to the peripheral and awaits a response
+	fileprivate let _writeValue: Action<Data, Data, NSError>
+
+	/// Writes data to the peripheral without awaiting a response
+	fileprivate let _sendData: Action<Data, Data, NoError>
+
+	/// Sets notifications or indications for the value of the characteristic.
+	fileprivate let _setNotify: Action<Bool, Bool, NSError>
+
 	/// The Bluetooth-specific UUID of the attribute.
 	public let uuid: Property<CBUUID>
 
@@ -33,21 +48,6 @@ public class Characteristic {
 
 	/// A Boolean property indicating whether the characteristic is currently notifying a subscribed central of its value.
 	public let isNotifying: Property<Bool>
-
-	/// Discovers the descriptors of the characteristic.
-	public let discoverDescriptors: Action<Void, Descriptor, NSError>
-
-	/// Retrieves the value of the characteristic.
-	public let readValue: Action<Void, Data?, NSError>
-
-	/// Writes data to the peripheral and awaits a response
-	public let writeValue: Action<Data, Data, NSError>
-
-	/// Writes data to the peripheral without awaiting a response
-	public let sendData: Action<Data, Data, NoError>
-
-	/// Sets notifications or indications for the value of the characteristic.
-	public let setNotify: Action<Bool, Bool, NSError>
 
 	init(peripheral: Peripheral,
 	     service: Service,
@@ -94,26 +94,26 @@ public class Characteristic {
 											.skipNil()
 		)
 
-		self.discoverDescriptors = Action(enabledIf: peripheral.state.isConnected,
-		                                  execute: { _  in _self._discoverDescriptors() })
+		self._discoverDescriptors = Action(enabledIf: peripheral.state.isConnected,
+		                                  execute: { _  in _self.discoverDescriptors() })
 
-		self.readValue = Action(enabledIf: peripheral.state.isConnected,
-		                        execute: { _ in _self._readValue() })
+		self._readValue = Action(enabledIf: peripheral.state.isConnected,
+		                        execute: { _ in _self.readValue() })
 
-		self.writeValue = Action(enabledIf: peripheral.state.isConnected,
-		                         execute: { value in _self._write(value: value) })
+		self._writeValue = Action(enabledIf: peripheral.state.isConnected,
+		                         execute: { value in _self.write(value: value) })
 
-		self.sendData = Action(enabledIf: peripheral.state.isConnected,
-		                         execute: { value in _self._send(data: value) })
+		self._sendData = Action(enabledIf: peripheral.state.isConnected,
+		                         execute: { value in _self.send(data: value) })
 
-		self.setNotify = Action(enabledIf: peripheral.state.isConnected,
-		                        execute: { value in _self._setNotify(enabled: value) })
+		self._setNotify = Action(enabledIf: peripheral.state.isConnected,
+		                        execute: { value in _self.setNotify(enabled: value) })
 
 		_self = self
 	}
 
 	/// Discovers the descriptors of the characteristic.
-	fileprivate func _discoverDescriptors() -> SignalProducer<Descriptor, NSError> {
+	public func discoverDescriptors() -> SignalProducer<Descriptor, NSError> {
 		let signal = delegate
 			.events
 			.filter { $0.filter(peripheral: self.peripheral.peripheral) }
@@ -151,7 +151,7 @@ public class Characteristic {
 	}
 
 	/// Retrieves the value of the characteristic.
-	fileprivate func _readValue() -> SignalProducer<Data?, NSError> {
+	public func readValue() -> SignalProducer<Data?, NSError> {
 		let signal = delegate
 			.events
 			.filter { $0.filter(peripheral: self.peripheral.peripheral) }
@@ -181,7 +181,7 @@ public class Characteristic {
 	}
 
 	/// Writes data to the peripheral and awaits a response
-	fileprivate func _write(value data: Data) -> SignalProducer<Data, NSError> {
+	public func write(value data: Data) -> SignalProducer<Data, NSError> {
 		let signal = delegate
 			.events
 			.filter { $0.filter(peripheral: self.peripheral.peripheral) }
@@ -211,7 +211,7 @@ public class Characteristic {
 	}
 
 	/// Writes data to the peripheral without awaiting a response
-	fileprivate func _send(data: Data) -> SignalProducer<Data, NoError> {
+	public func send(data: Data) -> SignalProducer<Data, NoError> {
 		return SignalProducer<Void, NoError> {
 			self.peripheral
 				.peripheral
@@ -221,7 +221,7 @@ public class Characteristic {
 	}
 
 	/// Sets notifications or indications for the value of the characteristic.
-	fileprivate func _setNotify(enabled: Bool) -> SignalProducer<Bool, NSError> {
+	public func setNotify(enabled: Bool) -> SignalProducer<Bool, NSError> {
 		let signal = delegate
 			.events
 			.filter { $0.isDidUpdateNotificationStateEvent() }
@@ -265,32 +265,32 @@ extension Characteristic: Hashable {
 
 // MARK: - NonBlocking
 
-extension Characteristic: NonBlockingProvider {}
+extension Characteristic: ActionableProvider {}
 
-public extension NonBlocking where Base: Characteristic {
+public extension Actionable where Base: Characteristic {
 
 	/// Discovers the descriptors of the characteristic.
-	public func discoverDescriptors() -> SignalProducer<Descriptor, NSError> {
-		return base._discoverDescriptors()
+	public var discoverDescriptors: Action<Void, Descriptor, NSError> {
+		return base._discoverDescriptors
 	}
 
 	/// Retrieves the value of the characteristic.
-	public func readValue() -> SignalProducer<Data?, NSError> {
-		return base._readValue()
+	public var readValue: Action<Void, Data?, NSError> {
+		return base._readValue
 	}
 
 	/// Writes data to the peripheral and awaits a response
-	public func write(value data: Data) -> SignalProducer<Data, NSError> {
-		return base._write(value: data)
+	public var write: Action<Data, Data, NSError> {
+		return base._writeValue
 	}
 
 	/// Writes data to the peripheral without awaiting a response
-	public func send(data: Data) -> SignalProducer<Data, NoError> {
-		return base._send(data: data)
+	public var send: Action<Data, Data, NoError> {
+		return base._sendData
 	}
 
 	/// Sets notifications or indications for the value of the characteristic.
-	public func setNotify(enabled: Bool) -> SignalProducer<Bool, NSError> {
-		return base._setNotify(enabled: enabled)
+	public var setNotify: Action<Bool, Bool, NSError> {
+		return base._setNotify
 	}
 }

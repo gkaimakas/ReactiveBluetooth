@@ -5,17 +5,17 @@
 //  Created by George Kaimakas on 26/10/2017.
 //
 
-public protocol NonBlockingProvider: class {}
+public protocol ActionableProvider: class {}
 
-extension NonBlockingProvider {
+extension ActionableProvider {
 	/// A proxy which hosts non blocking extensions for `self`.
-	public var nonBlocking: NonBlocking<Self> {
-		return NonBlocking(self)
+	public var action: Actionable<Self> {
+		return Actionable(self)
 	}
 }
 
 /// A proxy which hosts non blocking extensions of `Base`.
-public struct NonBlocking<Base> {
+public struct Actionable<Base> {
 	/// The `Base` instance the extensions would be invoked with.
 	public let base: Base
 

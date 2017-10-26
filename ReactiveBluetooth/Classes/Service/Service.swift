@@ -14,6 +14,12 @@ public class Service {
 	let delegate: PeripheralObserver
 	let service: CBService
 
+	/// Discovers the specified included services of this service.
+	fileprivate let _discoverIncludedServices: Action<[CBUUID]?, Service, NSError>
+
+	/// Discovers the specified characteristics of the service.
+	fileprivate let _discoverCharacteristics: Action<[CBUUID]?, Characteristic, NSError>
+
 	/// The Bluetooth-specific UUID of the attribute.
 	public let uuid: Property<CBUUID>
 
@@ -28,12 +34,6 @@ public class Service {
 
 	/// A list of included services that have been discovered in this service.
 	public let includedServices: Property<Set<Service>>
-
-	/// Discovers the specified included services of this service.
-	public let discoverIncludedServices: Action<[CBUUID]?, Service, NSError>
-
-	/// Discovers the specified characteristics of the service.
-	public let discoverCharacteristics: Action<[CBUUID]?, Characteristic, NSError>
 
 	internal init(peripheral: Peripheral,
 	              service: CBService,
@@ -73,19 +73,19 @@ public class Service {
 											.map { Set($0) }
 		)
 
-		self.discoverIncludedServices = Action(enabledIf: peripheral.state.isConnected,
-		                                       execute: { uuids in return _self._discoverIncludedServices(uuids) })
+		self._discoverIncludedServices = Action(enabledIf: peripheral.state.isConnected,
+		                                       execute: { uuids in return _self.discoverIncludedServices(uuids) })
 
 
-		self.discoverCharacteristics = Action(enabledIf: peripheral.state.isConnected,
-		                                       execute: { uuids in return _self._discoverCharacteristics(uuids) })
+		self._discoverCharacteristics = Action(enabledIf: peripheral.state.isConnected,
+		                                       execute: { uuids in return _self.discoverCharacteristics(uuids) })
 
 		_self = self
 
 	}
 
 	/// Discovers the specified included services of this service.
-	fileprivate func _discoverIncludedServices(_ includedServiceUUID: [CBUUID]? = nil) -> SignalProducer<Service, NSError> {
+	public func discoverIncludedServices(_ includedServiceUUID: [CBUUID]? = nil) -> SignalProducer<Service, NSError> {
 		let signal = delegate
 			.events
 			.filter { $0.isDidDiscoverIncludedServicesEvent() }
@@ -126,7 +126,7 @@ public class Service {
 	}
 
 	/// Discovers the specified characteristics of the service.
-	fileprivate func _discoverCharacteristics(_ characteristicsUUIDs: [CBUUID]? = nil) -> SignalProducer<Characteristic, NSError> {
+	public func discoverCharacteristics(_ characteristicsUUIDs: [CBUUID]? = nil) -> SignalProducer<Characteristic, NSError> {
 		let signal = delegate
 			.events
 			.filter { $0.isDidDiscoverCharacteristicsEvent() }
@@ -179,17 +179,17 @@ extension Service: Hashable {
 
 // MARK: - NonBlocking
 
-extension Service: NonBlockingProvider {}
+extension Service: ActionableProvider {}
 
-extension NonBlocking where Base: Service {
+extension Actionable where Base: Service {
 	
 	/// Discovers the specified included services of this service.
-	public func discoverIncludedServices(_ includedServiceUUID: [CBUUID]? = nil) -> SignalProducer<Service, NSError> {
-		return base._discoverIncludedServices(includedServiceUUID)
+	public var discoverIncludedServices: Action<[CBUUID]?, Service, NSError> {
+		return base._discoverIncludedServices
 	}
 
 	/// Discovers the specified characteristics of the service.
-	public func discoverCharacteristics(_ characteristicsUUIDs: [CBUUID]? = nil) -> SignalProducer<Characteristic, NSError> {
-		return base._discoverCharacteristics(characteristicsUUIDs)
+	public var discoverCharacteristics: Action<[CBUUID]?, Characteristic, NSError> {
+		return base._discoverCharacteristics
 	}
 }
