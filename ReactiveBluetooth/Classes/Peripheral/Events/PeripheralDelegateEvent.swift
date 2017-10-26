@@ -14,9 +14,12 @@ internal enum PeripheralDelegateEvent {
 	case didDiscoverServices(peripheral: CBPeripheral, error: Error?)
 	case didDiscoverIncludedServices(peripheral: CBPeripheral, service: CBService, error: Error?)
 	case didDiscoverCharacteristics(peripheral: CBPeripheral, service: CBService, error: Error?)
+	case didDiscoverDescriptors(peripheral: CBPeripheral, characteristic: CBCharacteristic, error: Error?)
 	case didUpdateNotificationState(peripheral: CBPeripheral, characteristic: CBCharacteristic, error: Error?)
-	case didWriteValue(peripheral: CBPeripheral, characteristic: CBCharacteristic, error: Error?)
-	case didUpdateValue(peripheral: CBPeripheral, characteristic: CBCharacteristic, error: Error?)
+	case didWriteValueForCharacteristic(peripheral: CBPeripheral, characteristic: CBCharacteristic, error: Error?)
+	case didWriteValueForDescriptor(peripheral: CBPeripheral, descriptor: CBDescriptor, error: Error?)
+	case didUpdateValueForCharacteristic(peripheral: CBPeripheral, characteristic: CBCharacteristic, error: Error?)
+	case didUpdateValueForDescriptor(peripheral: CBPeripheral, descriptor: CBDescriptor, error: Error?)
 
 	func filter(peripheral: CBPeripheral) -> Bool {
 		switch self {
@@ -30,11 +33,17 @@ internal enum PeripheralDelegateEvent {
 			return peripheral.identifier == _peripheral.identifier
 		case .didDiscoverCharacteristics(peripheral: let _peripheral, service: _, error: _):
 			return peripheral.identifier == _peripheral.identifier
+		case .didDiscoverDescriptors(peripheral: let _peripheral, characteristic: _, error: _):
+			return peripheral.identifier == _peripheral.identifier
 		case .didUpdateNotificationState(peripheral: let _peripheral, characteristic: _, error: _):
 			return peripheral.identifier == _peripheral.identifier
-		case .didWriteValue(peripheral: let _peripheral, characteristic: _, error: _):
+		case .didWriteValueForCharacteristic(peripheral: let _peripheral, characteristic: _, error: _):
 			return peripheral.identifier == _peripheral.identifier
-		case .didUpdateValue(peripheral: let _peripheral, characteristic: _, error: _):
+		case .didWriteValueForDescriptor(peripheral: let _peripheral, descriptor: _, error: _):
+			return peripheral.identifier == _peripheral.identifier
+		case .didUpdateValueForCharacteristic(peripheral: let _peripheral, characteristic: _, error: _):
+			return peripheral.identifier == _peripheral.identifier
+		case .didUpdateValueForDescriptor(peripheral: let _peripheral, descriptor: _, error: _):
 			return peripheral.identifier == _peripheral.identifier
 		}
 	}
@@ -68,12 +77,33 @@ internal enum PeripheralDelegateEvent {
 
 	func filter(characteristic: String) -> Bool {
 		switch self {
+		case .didDiscoverDescriptors(peripheral: _, characteristic: let _characteristic, error: _):
+			return characteristic == _characteristic.uuid.uuidString
 		case .didUpdateNotificationState(peripheral: _, characteristic: let _characteristic, error: _):
 			return characteristic == _characteristic.uuid.uuidString
-		case .didWriteValue(peripheral: _, characteristic: let _characteristic, error: _):
+		case .didWriteValueForCharacteristic(peripheral: _, characteristic: let _characteristic, error: _):
 			return characteristic == _characteristic.uuid.uuidString
-		case .didUpdateValue(peripheral: _, characteristic: let _characteristic, error: _):
+		case .didUpdateValueForCharacteristic(peripheral: _, characteristic: let _characteristic, error: _):
 			return characteristic == _characteristic.uuid.uuidString
+		default:
+			return false
+		}
+	}
+
+	func filter(descriptor: CBDescriptor) -> Bool {
+		return filter(descriptor: descriptor.uuid)
+	}
+
+	func filter(descriptor: CBUUID) -> Bool {
+		return filter(descriptor: descriptor.uuidString)
+	}
+
+	func filter(descriptor: String) -> Bool {
+		switch self {
+		case .didWriteValueForDescriptor(peripheral: _, descriptor: let _descriptor, error: _):
+			return descriptor == _descriptor.uuid.uuidString
+		case .didUpdateValueForDescriptor(peripheral: _, descriptor: let _descriptor, error: _):
+			return descriptor == _descriptor.uuid.uuidString
 		default:
 			return false
 		}
@@ -124,6 +154,15 @@ internal enum PeripheralDelegateEvent {
 		}
 	}
 
+	func isDidDiscoverDescriptorsEvent() -> Bool {
+		switch self {
+		case .didDiscoverDescriptors(peripheral: _, characteristic: _, error: _):
+			return true
+		default:
+			return false
+		}
+	}
+
 	func isDidUpdateNotificationStateEvent() -> Bool {
 		switch self {
 		case .didUpdateNotificationState(peripheral: _, characteristic: _, error: _):
@@ -133,18 +172,36 @@ internal enum PeripheralDelegateEvent {
 		}
 	}
 
-	func isDidWriteValueEvent() -> Bool {
+	func isDidWriteValueForCharacteristicEvent() -> Bool {
 		switch self {
-		case .didWriteValue(peripheral: _, characteristic: _, error: _):
+		case .didWriteValueForCharacteristic(peripheral: _, characteristic: _, error: _):
 			return true
 		default:
 			return false
 		}
 	}
 
-	func isDidUpdateValueEvent() -> Bool {
+	func isDidWriteValueForDescriptorEvent() -> Bool {
 		switch self {
-		case .didUpdateName(peripheral: _):
+		case .didWriteValueForDescriptor(peripheral: _, descriptor: _, error: _):
+			return true
+		default:
+			return false
+		}
+	}
+
+	func isDidUpdateValueForCharacteristicEvent() -> Bool {
+		switch self {
+		case .didUpdateValueForCharacteristic(peripheral: _, characteristic: _, error: _):
+			return true
+		default:
+			return false
+		}
+	}
+
+	func isDidUpdateValueForDescriptorEvent() -> Bool {
+		switch self {
+		case .didUpdateValueForDescriptor(peripheral: _, descriptor: _, error: _):
 			return true
 		default:
 			return false

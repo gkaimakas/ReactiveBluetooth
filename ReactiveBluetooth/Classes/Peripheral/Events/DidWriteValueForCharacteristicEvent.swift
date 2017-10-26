@@ -8,12 +8,12 @@
 import CoreBluetooth
 import Foundation
 
-internal class DidWriteValueEvent: PeripheralEvent {
+internal class DidWriteValueForCharacteristicEvent: PeripheralEvent {
 	let characteristic: CBCharacteristic
 
 	init?(event: PeripheralDelegateEvent) {
 		switch event {
-		case .didWriteValue(peripheral: let peripheral, characteristic: let characteristic, error: let error):
+		case .didWriteValueForCharacteristic(peripheral: let peripheral, characteristic: let characteristic, error: let error):
 			self.characteristic = characteristic
 			super.init(peripheral: peripheral, error: error)
 		default:

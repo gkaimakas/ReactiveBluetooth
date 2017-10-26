@@ -11,27 +11,49 @@ import ReactiveCocoa
 import ReactiveSwift
 import Result
 
-public class Peripheral: NSObject {
-	internal let peripheral: CBPeripheral
+public class Peripheral {
+	let peripheral: CBPeripheral
 	private let central: CentralManager
-	private let peripheralDelegate: PeripheralObserver
+	let delegate: PeripheralObserver
 
+	/// The name of the peripheral.
 	public let name: Property<String?>
+
+	/// The UUID associated with the peer.
 	public let identifier: Property<UUID>
+
+	/// The current connection state of the peripheral.
 	public let state: Property<CBPeripheralState>
+
+	/// A list of services on the peripheral that have been discovered.
+	public let services: Property<Set<Service>>
+
+	/// Establishes a local connection to this peripheral
+	public let connect: Action<[String: Any]?, Peripheral, NSError>
+
+	/// Cancels an active or pending local connection to this peripheral.
+	public let disconnect: Action<Void, Peripheral, NSError>
+
+	/// Discovers the specified services of the peripheral.
+	public let discoverServices: Action<[CBUUID]?, Service, NSError>
+
+	/// Retrieves the current RSSI value for the peripheral while it is connected to the central manager.
+	public let readRSSI: Action<Void, NSNumber, NSError>
+
 	public let canSendWriteWithoutResponse: Property<Bool>
 
 	internal init(peripheral: CBPeripheral,
 	              central: CentralManager)
 	{
 
+		weak var _self: Peripheral!
 		self.peripheral = peripheral
-		self.peripheralDelegate = PeripheralObserver()
+		self.delegate = PeripheralObserver()
 		self.central = central
-		self.peripheral.delegate = self.peripheralDelegate
+		self.peripheral.delegate = self.delegate
 
-		self.name = Property<String?>(initial: peripheral.name,
-		                              then: peripheralDelegate
+		self.name = Property(initial: peripheral.name,
+		                              then: delegate
 										.events
 										.filter { $0.filter(peripheral: peripheral) }
 										.filter { $0.isDidUpdateNameEvent() }
@@ -39,9 +61,9 @@ public class Peripheral: NSObject {
 										.map { $0?.peripheral.name }
 		)
 
-		self.identifier = Property<UUID>(value: peripheral.identifier)
+		self.identifier = Property(value: peripheral.identifier)
 
-		self.state = Property<CBPeripheralState>(initial: CBPeripheralState.disconnected,
+		self.state = Property(initial: CBPeripheralState.disconnected,
 		                                         then: peripheral
 													.reactive
 													.producer(forKeyPath: #keyPath(CBPeripheral.state))
@@ -52,26 +74,50 @@ public class Peripheral: NSObject {
 			)
 			.skipRepeats()
 
+		self.services = Property(initial: Set(),
+		                         then: peripheral
+									.reactive
+									.producer(forKeyPath: #keyPath(CBPeripheral.services))
+									.map { $0 as? [CBService] }
+									.skipNil()
+									.map { $0.map { Service(peripheral: _self,
+									                        service: $0,
+									                        delegate: _self.delegate)
+										}
+									}
+									.map { Set($0) }
+		)
+
 		self.canSendWriteWithoutResponse = Property<Bool>(value: peripheral.canSendWriteWithoutResponse)
 
+		self.connect = Action(execute: { options in _self._connect(options: options) })
 
-		super.init()
+		self.disconnect = Action(enabledIf: state.isConnecting.or(state.isConnected),
+		                         execute: { _ in _self._disconnect() })
+
+		self.discoverServices = Action(enabledIf: state.isConnected,
+		                               execute: { uuids in _self._discoverServices(uuids) })
+
+		self.readRSSI = Action(enabledIf: state.isConnected,
+		                       execute: { _ in _self._readRSSI() })
+		
+		_self = self
 	}
 
 	/// Establishes a local connection to this peripheral
-	public func connect(options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
+	fileprivate func _connect(options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
 		return central.connect(to: self, options: options)
 	}
 
 	/// Cancels an active or pending local connection to this peripheral.
-	public func disconnect() -> SignalProducer<Peripheral, NSError> {
+	fileprivate func _disconnect() -> SignalProducer<Peripheral, NSError> {
 		return central.cancelPeripheralConnection(from: self)
 	}
 
 	/// Discovers the specified services of the peripheral.
-	public func discoverServices(_ servicesUUIDs: [CBUUID]? = nil) -> SignalProducer<Service, NSError> {
+	fileprivate func _discoverServices(_ servicesUUIDs: [CBUUID]? = nil) -> SignalProducer<Service, NSError> {
 
-		let signal = peripheralDelegate
+		let signal = delegate
 			.events
 			.filter { $0.filter(peripheral: self.peripheral) }
 			.filter { $0.isDidDiscoverServicesEvent() }
@@ -89,7 +135,7 @@ public class Peripheral: NSObject {
 					let result = services
 						.map { Service(peripheral: self,
 						               service: $0,
-						               delegate: self.peripheralDelegate)
+						               delegate: self.delegate)
 							
 					}
 
@@ -108,9 +154,9 @@ public class Peripheral: NSObject {
 	}
 
 	/// Retrieves the current RSSI value for the peripheral while it is connected to the central manager.
-	public func readRSSI() -> SignalProducer<NSNumber, NSError> {
+	fileprivate func _readRSSI() -> SignalProducer<NSNumber, NSError> {
 
-		let signal = peripheralDelegate
+		let signal = delegate
 			.events
 			.filter { $0.filter(peripheral: self.peripheral) }
 			.filter { $0.isDidReadRSSIEvent() }
@@ -134,5 +180,44 @@ public class Peripheral: NSObject {
 
 		return producer
 	}
-	
+}
+
+// MARK: - Hashable
+
+extension Peripheral: Hashable {
+	public var hashValue: Int {
+		return peripheral.hashValue
+	}
+
+	public static func ==(lhs: Peripheral, rhs: Peripheral) -> Bool {
+		return lhs.peripheral == rhs.peripheral
+	}
+}
+
+// MARK: - NonBlocking
+
+extension Peripheral: NonBlockingProvider {}
+
+public extension NonBlocking where Base: Peripheral {
+
+	/// Establishes a local connection to this peripheral
+	public func connect(options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
+		return base._connect(options: options)
+	}
+
+	/// Cancels an active or pending local connection to this peripheral.
+	public func disconnect() -> SignalProducer<Peripheral, NSError> {
+		return base._disconnect()
+	}
+
+	/// Discovers the specified services of the peripheral.
+	public func discoverServices(_ servicesUUIDs: [CBUUID]? = nil) -> SignalProducer<Service, NSError> {
+		return base._discoverServices(servicesUUIDs)
+	}
+
+	/// Retrieves the current RSSI value for the peripheral while it is connected to the central manager.
+	public func readRSSI() -> SignalProducer<NSNumber, NSError> {
+		return base._readRSSI()
+	}
+
 }

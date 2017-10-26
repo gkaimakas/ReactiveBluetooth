@@ -33,19 +33,20 @@ class ViewController: UIViewController {
 		peripheral <~ producer
 			.flatMapError { _ in return SignalProducer.empty }
 
+
 		producer
-			.flatMap(.latest) { $0.connect() }
+			.flatMap(.latest) { _peripheral -> SignalProducer<Peripheral, NSError> in _peripheral.nonBlocking.connect() }
 			.flatMap(.latest) { _peripheral -> SignalProducer<Service, NSError> in
-				return _peripheral.discoverServices()
+				return _peripheral.nonBlocking.discoverServices()
 			}
 			.flatMap(.concat) { _service -> SignalProducer<Characteristic, NSError> in
-				return _service.discoverCharacteristics()
+				return _service.nonBlocking.discoverCharacteristics()
 			}
 			.then(centralManager.stopScan())
 			.then(self.peripheral
 				.producer
 				.skipNil()
-				.flatMap(.latest) { $0.disconnect() }
+				.flatMap(.latest) { $0.nonBlocking.disconnect() }
 			)
 			.start()
 
@@ -60,7 +61,7 @@ class ViewController: UIViewController {
 		peripheral
 			.producer
 			.skipNil()
-			.flatMap(.latest) { $0.readRSSI() }
+			.flatMap(.latest) { $0.nonBlocking.readRSSI() }
 			
 
 		peripheral

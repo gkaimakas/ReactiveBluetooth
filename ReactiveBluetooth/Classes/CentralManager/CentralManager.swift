@@ -13,17 +13,16 @@ import Result
 
 public class CentralManager {
 	let central: CBCentralManager
-	let centralDelegate: CentralManagerObserver
-
-	private let didStopScan: Signal<Void, NoError>
+	let delegate: CentralManagerObserver
+	let didStopScan: Signal<Void, NoError>
 
 	public let isScanning: Property<Bool>
 	public let state: Property<CBManagerState>
 
 	public init(queue: DispatchQueue? = nil,
 	     options: [String: Any]? = nil) {
-		self.centralDelegate = CentralManagerObserver()
-		let central = CBCentralManager(delegate: centralDelegate,
+		self.delegate = CentralManagerObserver()
+		let central = CBCentralManager(delegate: delegate,
 		                                queue: queue,
 		                                options: options)
 		self.central = central
@@ -41,8 +40,8 @@ public class CentralManager {
 			)
 			.skipRepeats()
 
-		self.state = Property<CBManagerState>(initial: CBManagerState.unknown,
-		                                      then: centralDelegate
+		self.state = Property<CBManagerState>(initial: central.state,
+		                                      then: delegate
 												.events
 												.filter { $0.filter(central: central) }
 												.filter { $0.isDidUpdateStateEvent() }
@@ -78,7 +77,7 @@ public class CentralManager {
 	/// calling `scanForPeripherals`
 	public func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?) -> SignalProducer<Peripheral, NoError> {
 
-		let signal = centralDelegate
+		let signal = delegate
 			.events
 			.filter { $0.filter(central: self.central) }
 			.filter { $0.isDidDiscoverEvent() }
@@ -115,7 +114,7 @@ public class CentralManager {
 	internal func connect(to peripheral: Peripheral,
 	                      options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
 
-		let signal = centralDelegate
+		let signal = delegate
 			.events
 			.filter { $0.filter(central: self.central) }
 			.filter { $0.filter(peripheral: peripheral.peripheral) }
@@ -145,7 +144,7 @@ public class CentralManager {
 	/// Cancels an active or pending local connection to a peripheral.
 	internal func cancelPeripheralConnection(from peripheral: Peripheral) -> SignalProducer<Peripheral, NSError> {
 
-		let signal = centralDelegate
+		let signal = delegate
 			.events
 			.filter { $0.filter(central: self.central) }
 			.filter { $0.filter(peripheral: peripheral.peripheral) }
@@ -170,6 +169,17 @@ public class CentralManager {
 			.then(resultProducer)
 
 		return producer
+	}
+}
 
+// MARK: - Hashable
+
+extension CentralManager: Hashable {
+	public var hashValue: Int {
+		return central.hashValue
+	}
+
+	public static func ==(lhs: CentralManager, rhs: CentralManager) -> Bool {
+		return lhs.central == rhs.central
 	}
 }

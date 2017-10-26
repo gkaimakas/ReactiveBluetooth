@@ -54,6 +54,14 @@ extension PeripheralObserver: CBPeripheralDelegate {
 	}
 
 	func peripheral(_ peripheral: CBPeripheral,
+	                didDiscoverDescriptorsFor characteristic: CBCharacteristic,
+	                error: Error?) {
+		eventsObserver.send(value: .didDiscoverDescriptors(peripheral: peripheral,
+		                                                   characteristic: characteristic,
+		                                                   error: error))
+	}
+
+	func peripheral(_ peripheral: CBPeripheral,
 	                       didUpdateNotificationStateFor characteristic: CBCharacteristic,
 	                       error: Error?) {
 
@@ -66,19 +74,33 @@ extension PeripheralObserver: CBPeripheralDelegate {
 	                       didWriteValueFor characteristic: CBCharacteristic,
 	                       error: Error?) {
 
-		eventsObserver.send(value: .didWriteValue(peripheral: peripheral,
+		eventsObserver.send(value: .didWriteValueForCharacteristic(peripheral: peripheral,
 		                                          characteristic: characteristic,
 		                                          error: error))
 
+	}
+
+	func peripheral(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: Error?) {
+		eventsObserver.send(value: .didWriteValueForDescriptor(peripheral: peripheral,
+		                                                       descriptor: descriptor,
+		                                                       error: error))
 	}
 
 	func peripheral(_ peripheral: CBPeripheral,
 	                       didUpdateValueFor characteristic: CBCharacteristic,
 	                       error: Error?) {
 		
-		eventsObserver.send(value: .didUpdateValue(peripheral: peripheral,
+		eventsObserver.send(value: .didUpdateValueForCharacteristic(peripheral: peripheral,
 		                                           characteristic: characteristic,
 		                                           error: error))
 
+	}
+
+	func peripheral(_ peripheral: CBPeripheral,
+	                didUpdateValueFor descriptor: CBDescriptor,
+	                error: Error?) {
+		eventsObserver.send(value: .didUpdateValueForDescriptor(peripheral: peripheral,
+		                                                        descriptor: descriptor,
+		                                                        error: error))
 	}
 }

@@ -8,7 +8,7 @@
 import CoreBluetooth
 import Foundation
 
-internal class DidDiscoverCharacteristicsEvent: PeripheralEvent {
+class DidDiscoverCharacteristicsEvent: PeripheralEvent {
 	let service: CBService
 
 	init?(event: PeripheralDelegateEvent) {

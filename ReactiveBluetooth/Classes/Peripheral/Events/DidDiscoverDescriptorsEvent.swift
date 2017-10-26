@@ -1,19 +1,19 @@
 //
-//  DidUpdateValueEvent.swift
+//  DidDiscoverDescriptorsEvent.swift
 //  ReactiveBluetooth
 //
-//  Created by George Kaimakas on 24/10/2017.
+//  Created by George Kaimakas on 26/10/2017.
 //
 
 import CoreBluetooth
 import Foundation
 
-internal class DidUpdateValueForCharacteristicEvent: PeripheralEvent {
+class DidDiscoverDescriptorsEvent: PeripheralEvent {
 	let characteristic: CBCharacteristic
 
 	init?(event: PeripheralDelegateEvent) {
 		switch event {
-		case .didUpdateValueForCharacteristic(peripheral: let peripheral, characteristic: let characteristic, error: let error):
+		case let .didDiscoverDescriptors(peripheral: peripheral, characteristic: characteristic, error: error):
 			self.characteristic = characteristic
 			super.init(peripheral: peripheral, error: error)
 		default:
