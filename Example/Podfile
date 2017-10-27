@@ -4,6 +4,9 @@ use_frameworks!
 target 'ReactiveBluetooth_Example' do
 	pod 'ReactiveBluetooth', :path => '../'
 
+	pod 'ASDKFluentExtensions'
+	pod 'Texture', '2.5'
+
 	target 'ReactiveBluetooth_Tests' do
 		inherit! :search_paths
 
