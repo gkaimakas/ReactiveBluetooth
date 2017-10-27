@@ -16,7 +16,7 @@ class SyncDiscoveredPeripheralCache: NSObject {
 	private let queue: DispatchQueue
 
 	override init() {
-		mapTable = NSMapTable<CBPeripheral, DiscoveredPeripheral>.strongToWeakObjects()
+		mapTable = NSMapTable<CBPeripheral, DiscoveredPeripheral>.weakToWeakObjects()
 		queue = DispatchQueue(label: "com.gkaimakas.ReactiveBluetooth.SyncDiscoveredPeripheralCache", attributes: .concurrent)
 	}
 

@@ -215,7 +215,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 96LJ93WQBU;
+						DevelopmentTeam = 66U3L98C8Q;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
@@ -530,7 +530,7 @@
 			baseConfigurationReference = 19F0B8FA7A93E777C8C891BC /* Pods-ReactiveBluetooth_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 96LJ93WQBU;
+				DEVELOPMENT_TEAM = 66U3L98C8Q;
 				INFOPLIST_FILE = ReactiveBluetooth/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -547,7 +547,7 @@
 			baseConfigurationReference = 5ED6C08FEB82AC56627579CA /* Pods-ReactiveBluetooth_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 96LJ93WQBU;
+				DEVELOPMENT_TEAM = 66U3L98C8Q;
 				INFOPLIST_FILE = ReactiveBluetooth/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

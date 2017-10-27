@@ -15,7 +15,7 @@ public class CentralManager {
 	let central: CBCentralManager
 	let delegate: CentralManagerObserver
 	let didStopScan: Signal<Void, NoError>
-	let weakDiscoveredPeripheralCache: SyncDiscoveredPeripheralCache
+	let discoveredPeripheralCache: SyncDiscoveredPeripheralCache
 	let didDiscoverPeripheral: Signal<DiscoveredPeripheral, NoError>
 
 	public let isScanning: Property<Bool>
@@ -26,7 +26,7 @@ public class CentralManager {
 
 		weak var _self: CentralManager!
 
-		self.weakDiscoveredPeripheralCache = SyncDiscoveredPeripheralCache()
+		self.discoveredPeripheralCache = SyncDiscoveredPeripheralCache()
 		self.delegate = CentralManagerObserver()
 		let central = CBCentralManager(delegate: delegate,
 		                                queue: queue,
@@ -73,7 +73,7 @@ public class CentralManager {
 
 		// It updates the local cache with updates coming from `didDiscover(central:, peripheral:, advertismentData:, rssi)`
 		// It should be thread safe ()
-		weakDiscoveredPeripheralCache
+		discoveredPeripheralCache
 			.reactive
 			.synchronizeDiscoveredPeripherals <~ didDiscoverPeripheral
 
@@ -105,13 +105,11 @@ public class CentralManager {
 	/// Scans for peripherals that are advertising the specified services.
 	/// Duplicates are ignored. Please make sure that the central is `poweredOn` before
 	/// calling `scanForPeripherals`
-	public func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?) -> SignalProducer<DiscoveredPeripheral, NoError> {
+	public func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]? = nil) -> SignalProducer<DiscoveredPeripheral, NoError> {
 		let resultProducer = SignalProducer(didDiscoverPeripheral)
 		
 		let producer = SignalProducer<Void, NoError> {
-				self.central.scanForPeripherals(withServices: serviceUUIDs, options: [
-					CBCentralManagerScanOptionAllowDuplicatesKey: false
-					])
+				self.central.scanForPeripherals(withServices: serviceUUIDs, options: options)
 			}
 			.then(resultProducer)
 			.take(until: didStopScan)
