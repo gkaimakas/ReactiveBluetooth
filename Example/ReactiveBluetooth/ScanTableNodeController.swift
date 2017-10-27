@@ -12,13 +12,29 @@ import ChameleonFramework
 import CoreBluetooth
 import Foundation
 import ReactiveCocoa
+import ReactiveBluetooth
 import ReactiveSwift
 import Result
 
 class ScanTableNodeController: ASViewController<ASTableNode> {
+	let centralManager = CentralManager()
+	var disposable = CompositeDisposable()
+	let syncCache = SyncArray<DiscoveredPeripheral>()
+
 	init() {
 		super.init(node: ASTableNode())
 		self.navigationItem.title = "Reactive Bluetooth"
+
+		syncCache.reactive.sync <~ centralManager
+			.state
+			.producer
+			.filter { $0 == CBManagerState.poweredOn }
+			.flatMap(.latest) { _ in return self.centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true]) }
+
+
+		node.reactive.reloadData() <~ syncCache
+			.events
+			.map { _ in return () }
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -42,13 +58,13 @@ extension ScanTableNodeController: ASTableDataSource, ASTableDelegate {
 //	}
 
 	func tableNode(_ tableNode: ASTableNode, numberOfRowsInSection section: Int) -> Int {
-		return 100
+		return syncCache.count
 	}
 
 	func tableNode(_ tableNode: ASTableNode, nodeBlockForRowAt indexPath: IndexPath) -> ASCellNodeBlock {
-		let progress: Float = Float(indexPath.row) / 100
+		let peripheral = syncCache[indexPath.row]
 		let nodeBlock: ASCellNodeBlock = {
-			return DiscoveredPeripheralNodeCell(progress: progress)
+			return DiscoveredPeripheralNodeCell(discoveredPeripheral: peripheral)
 		}
 		return nodeBlock
 	}

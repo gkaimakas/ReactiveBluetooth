@@ -13,18 +13,32 @@ import Foundation
 import UIKit
 
 class ASProgressNode: ASDisplayNode {
-	private var progressNode: ASDisplayNode
-	init(progress: Float) {
+	private var progressView: UIProgressView!
+	private let progressNode: ASDisplayNode
+	public var progress: Float {
+		get {
+			return progressView.progress
+		}
+
+		set {
+			progressView?.progress = newValue
+		}
+	}
+
+	override init() {
+		weak var _self: ASProgressNode!
 		progressNode = ASDisplayNode(viewBlock: { () -> UIView in
-			let progressView = UIProgressView(progressViewStyle: .default)
-			progressView.progressTintColor = UIColor.flatPlum
-			progressView.trackTintColor = UIColor.flatWhite
-			progressView.progress = progress
-			return progressView
+			_self.progressView = UIProgressView(progressViewStyle: .default)
+			_self.progressView.progressTintColor = UIColor.flatPlum
+			_self.progressView.trackTintColor = UIColor.flatWhite
+			_self.progressView.progress = 0
+			return _self.progressView
 		})
 		super.init()
+		_self = self
 		self.addSubnode(progressNode)
 	}
+
 	override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
 		return ASStackLayoutSpec
 			.horizontal()

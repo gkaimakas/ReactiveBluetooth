@@ -10,20 +10,25 @@ import AsyncDisplayKit
 import ASDKFluentExtensions
 import ChameleonFramework
 import Foundation
+import ReactiveBluetooth
 import UIKit
 
 class DiscoveredPeripheralNodeCell: ASCellNode {
 
 	let card: DiscoveredPeripheralCard
 
-	init(progress: Float) {
-		card = DiscoveredPeripheralCard(progress: progress)
+	init(discoveredPeripheral: DiscoveredPeripheral) {
+		card = DiscoveredPeripheralCard(discoveredPeripheral: discoveredPeripheral)
 		super.init()
 
 		self.addSubnode(card)
 
-		self.card.cornerRadius = 20
+		self.card.cornerRadius = 12
 		self.card.clipsToBounds = true
+		self.card.shadowColor = UIColor.red.cgColor
+		self.card.shadowRadius = 10
+		self.card.shadowOffset = CGSize(width: 20, height: 20)
+		self.card.shadowOpacity = 1
 		self.backgroundColor = UIColor.flatWhite
 		self.automaticallyManagesSubnodes = true
 	}
@@ -32,7 +37,7 @@ class DiscoveredPeripheralNodeCell: ASCellNode {
 
 		let container = ASStackLayoutSpec
 			.vertical()
-			.withInset(UIEdgeInsets(top: 8, left: 24, bottom: 8, right: 24))
+			.withInset(UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16))
 			.withChildren([card])
 
 		return container

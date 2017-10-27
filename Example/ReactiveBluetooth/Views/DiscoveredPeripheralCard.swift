@@ -10,7 +10,8 @@ import AsyncDisplayKit
 import ASDKFluentExtensions
 import Foundation
 import ReactiveCocoa
-import ReplayKit
+import ReactiveBluetooth
+import ReactiveSwift
 import Result
 
 class DiscoveredPeripheralCard: ASDisplayNode {
@@ -35,9 +36,9 @@ class DiscoveredPeripheralCard: ASDisplayNode {
 
 	let actionButton = ASButtonNode()
 
-	init(progress: Float) {
+	init(discoveredPeripheral: DiscoveredPeripheral) {
 
-		rssiProgress = ASProgressNode(progress: progress)
+		rssiProgress = ASProgressNode()
 		
 		super.init()
 
@@ -50,20 +51,42 @@ class DiscoveredPeripheralCard: ASDisplayNode {
 
 		connectionStateImage.image = UIImage.image(with: UIColor.flatOrange, size: CGSize(width: 120, height: 120))
 
-		nameLabel.attributedText = NSAttributedString(string: "Peripheral Name", attributes: [
-			NSAttributedStringKey.foregroundColor : UIColor.darkGray,
-			NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 20)
-			])
+		rssiProgress.reactive.progress <~ discoveredPeripheral
+			.RSSI
+			.producer
+			.map { $0.floatValue }
+			.map { -$0 }
+			.map { $0/100 }
 
-		identifierTitleLabel.attributedText = NSAttributedString(string: "Identifier", attributes: [
-			NSAttributedStringKey.foregroundColor : UIColor.lightGray,
-			NSAttributedStringKey.font: UIFont.systemFont(ofSize: 10)
-			])
+		connectionStateImage.reactive.image <~ discoveredPeripheral
+			.peripheral
+			.state
+			.producer
+			.map { state -> UIImage in
+				switch state {
+				case .connected: return UIImage.image(with: UIColor.flatGreen, size: CGSize(width: 120, height: 120))
+				case .connecting: return UIImage.image(with: UIColor.flatBlue, size: CGSize(width: 120, height: 120))
+				case .disconnecting: return UIImage.image(with: UIColor.flatYellow, size: CGSize(width: 120, height: 120))
+				case .disconnected: return UIImage.image(with: UIColor.flatOrange, size: CGSize(width: 120, height: 120))
+				}
+			}
 
-		identifierLabel.attributedText = NSAttributedString(string: "f3abbdde-bb0b-11e7-abc4-cec278b6b50a", attributes: [
-			NSAttributedStringKey.foregroundColor : UIColor.darkGray,
-			NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)
-			])
+		nameLabel.reactive.attributedText <~ discoveredPeripheral
+			.peripheral
+			.name
+			.producer
+			.map { $0 ?? "Not Available" }
+			.boldAttributedString(color: .darkGray, size: 20)
+
+		identifierTitleLabel.reactive.attributedText <~ SignalProducer<String, NoError>(value: "Identifier")
+			.attributedString(color: .lightGray, size: 10)
+
+		identifierLabel.reactive.attributedText <~ discoveredPeripheral
+			.peripheral
+			.identifier
+			.producer
+			.map { $0.uuidString }
+			.attributedString(color: .darkGray, size: 16)
 
 		actionButton.setAttributedTitle(NSAttributedString(string: "Connect", attributes: [
 			NSAttributedStringKey.foregroundColor : UIColor.white,
@@ -72,7 +95,6 @@ class DiscoveredPeripheralCard: ASDisplayNode {
 
 		actionButton.backgroundColor = UIColor.flatMint
 		actionButton.isUserInteractionEnabled = true
-
 
 		self.backgroundColor = UIColor.white
 		self.automaticallyManagesSubnodes = true
@@ -112,7 +134,7 @@ class DiscoveredPeripheralCard: ASDisplayNode {
 								])
 						])
 					.withSpacing(8)
-					.withInset(UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
+					.withInset(UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16))
 				,
 				actionButton
 					.withHeight(ASDimension(unit: ASDimensionUnit.points, value: 40))
