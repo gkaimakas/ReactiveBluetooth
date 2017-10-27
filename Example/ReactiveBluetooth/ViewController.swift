@@ -16,7 +16,7 @@ class ViewController: UIViewController {
 	let centralManager = CentralManager()
 	var discoverProducer: SignalProducer<DiscoveredPeripheral, NoError>!
 	var disposable = CompositeDisposable()
-	let syncCache = SyncCollection<DiscoveredPeripheral>()
+	let syncCache = SyncArray<DiscoveredPeripheral>()
 
 
     override func viewDidLoad() {
@@ -30,7 +30,7 @@ class ViewController: UIViewController {
 			.flatMap(.latest) { _ in return self.centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true]) }
 
 
-//		syncCache.reactive.sync <~ discoverProducer
+		syncCache.reactive.sync <~ discoverProducer
 
 		disposable += discoverProducer.start()
 
