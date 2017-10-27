@@ -20,6 +20,8 @@ class DiscoveredPeripheralNodeCell: ASCellNode {
 		card = DiscoveredPeripheralCard(progress: progress)
 		super.init()
 
+		self.addSubnode(card)
+
 		self.card.cornerRadius = 20
 		self.card.clipsToBounds = true
 		self.backgroundColor = UIColor.flatWhite
