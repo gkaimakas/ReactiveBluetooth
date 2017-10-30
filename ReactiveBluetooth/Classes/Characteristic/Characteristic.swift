@@ -16,21 +16,6 @@ public class Characteristic {
 	let characteristic: CBCharacteristic
 	let delegate: PeripheralObserver
 
-	/// Discovers the descriptors of the characteristic.
-	fileprivate let _discoverDescriptors: Action<Void, Descriptor, NSError>
-
-	/// Retrieves the value of the characteristic.
-	fileprivate let _readValue: Action<Void, Data?, NSError>
-
-	/// Writes data to the peripheral and awaits a response
-	fileprivate let _writeValue: Action<Data, Data, NSError>
-
-	/// Writes data to the peripheral without awaiting a response
-	fileprivate let _sendData: Action<Data, Data, NoError>
-
-	/// Sets notifications or indications for the value of the characteristic.
-	fileprivate let _setNotify: Action<Bool, Bool, NSError>
-
 	/// The Bluetooth-specific UUID of the attribute.
 	public let uuid: Property<CBUUID>
 
@@ -93,21 +78,6 @@ public class Characteristic {
 											.map { $0 as? Bool }
 											.skipNil()
 		)
-
-		self._discoverDescriptors = Action(enabledIf: peripheral.state.isConnected,
-		                                  execute: { _  in _self.discoverDescriptors() })
-
-		self._readValue = Action(enabledIf: peripheral.state.isConnected,
-		                        execute: { _ in _self.readValue() })
-
-		self._writeValue = Action(enabledIf: peripheral.state.isConnected,
-		                         execute: { value in _self.write(value: value) })
-
-		self._sendData = Action(enabledIf: peripheral.state.isConnected,
-		                         execute: { value in _self.send(data: value) })
-
-		self._setNotify = Action(enabledIf: peripheral.state.isConnected,
-		                        execute: { value in _self.setNotify(enabled: value) })
 
 		_self = self
 	}
@@ -260,37 +230,5 @@ extension Characteristic: Hashable {
 
 	public static func ==(lhs: Characteristic, rhs: Characteristic) -> Bool {
 		return lhs.uuid.value == rhs.uuid.value
-	}
-}
-
-// MARK: - NonBlocking
-
-extension Characteristic: ActionableProvider {}
-
-public extension Actionable where Base: Characteristic {
-
-	/// Discovers the descriptors of the characteristic.
-	public var discoverDescriptors: Action<Void, Descriptor, NSError> {
-		return base._discoverDescriptors
-	}
-
-	/// Retrieves the value of the characteristic.
-	public var readValue: Action<Void, Data?, NSError> {
-		return base._readValue
-	}
-
-	/// Writes data to the peripheral and awaits a response
-	public var write: Action<Data, Data, NSError> {
-		return base._writeValue
-	}
-
-	/// Writes data to the peripheral without awaiting a response
-	public var send: Action<Data, Data, NoError> {
-		return base._sendData
-	}
-
-	/// Sets notifications or indications for the value of the characteristic.
-	public var setNotify: Action<Bool, Bool, NSError> {
-		return base._setNotify
 	}
 }

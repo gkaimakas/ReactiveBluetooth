@@ -16,12 +16,6 @@ public class Descriptor {
 	let delegate: PeripheralObserver
 	let descriptor: CBDescriptor
 
-	/// Retrieves the value of the descriptor.
-	fileprivate let _readValue: Action<Void, Any?, NSError>
-
-	/// Writes the value of the descriptor.
-	fileprivate let _writeValue: Action<Data, Any?, NSError>
-
 	public let characteristic: Characteristic
 
 	/// The Bluetooth-specific UUID of the attribute.
@@ -35,8 +29,6 @@ public class Descriptor {
 	              descriptor: CBDescriptor,
 	              delegate: PeripheralObserver) {
 
-		weak var _self: Descriptor!
-
 		self.peripheral = peripheral
 		self.characteristic = characteristic
 		self.descriptor = descriptor
@@ -49,14 +41,6 @@ public class Descriptor {
 								.reactive
 								.producer(forKeyPath: #keyPath(CBDescriptor.value))
 		)
-
-		self._readValue = Action(enabledIf: peripheral.state.isConnected,
-		                        execute: { _ in _self.readValue() })
-
-		self._writeValue = Action(enabledIf: peripheral.state.isConnected,
-		                        execute: { data in _self.write(value: data) })
-
-		_self = self
 	}
 
 	/// Retrieves the value of the characteristic descriptor.
@@ -128,22 +112,6 @@ extension Descriptor: Hashable {
 
 	public static func ==(lhs: Descriptor, rhs: Descriptor) -> Bool {
 		return lhs.uuid.value == rhs.uuid.value
-	}
-}
-
-// MARK: - NonBlocking
-
-extension Descriptor: ActionableProvider {}
-
-public extension Actionable where Base: Descriptor {
-	/// Retrieves the value of the characteristic descriptor.
-	public var readValue: Action<Void, Any?, NSError> {
-		return base._readValue
-	}
-
-	/// Writes the value of a characteristic descriptor.
-	public var writeValue: Action<Data, Any?, NSError> {
-		return base._writeValue
 	}
 }
 

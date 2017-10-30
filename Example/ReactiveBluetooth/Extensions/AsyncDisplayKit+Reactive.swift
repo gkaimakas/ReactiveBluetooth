@@ -17,12 +17,6 @@ extension Reactive where Base: ASTextNode {
 	}
 }
 
-extension Reactive where Base: ASProgressNode {
-	var progress: BindingTarget<Float> {
-		return makeBindingTarget { $0.progress = $1 }
-	}
-}
-
 extension Reactive where Base: ASImageNode {
 	var image: BindingTarget<UIImage> {
 		return makeBindingTarget { $0.image = $1 }
@@ -33,4 +27,7 @@ extension Reactive where Base: ASTableNode {
 	func reloadData() -> BindingTarget<Void> {
 		return makeBindingTarget { (node, _) in node.reloadData() }
 	}
+}
+
+extension Reactive where Base: ASButtonNode {
 }

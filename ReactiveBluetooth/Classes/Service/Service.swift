@@ -14,12 +14,6 @@ public class Service {
 	let delegate: PeripheralObserver
 	let service: CBService
 
-	/// Discovers the specified included services of this service.
-	fileprivate let _discoverIncludedServices: Action<[CBUUID]?, Service, NSError>
-
-	/// Discovers the specified characteristics of the service.
-	fileprivate let _discoverCharacteristics: Action<[CBUUID]?, Characteristic, NSError>
-
 	/// The Bluetooth-specific UUID of the attribute.
 	public let uuid: Property<CBUUID>
 
@@ -72,13 +66,6 @@ public class Service {
 											                                delegate: delegate)}}
 											.map { Set($0) }
 		)
-
-		self._discoverIncludedServices = Action(enabledIf: peripheral.state.isConnected,
-		                                       execute: { uuids in return _self.discoverIncludedServices(uuids) })
-
-
-		self._discoverCharacteristics = Action(enabledIf: peripheral.state.isConnected,
-		                                       execute: { uuids in return _self.discoverCharacteristics(uuids) })
 
 		_self = self
 
@@ -174,22 +161,5 @@ extension Service: Hashable {
 
 	public static func ==(lhs: Service, rhs: Service) -> Bool {
 		return lhs.uuid.value == rhs.uuid.value
-	}
-}
-
-// MARK: - NonBlocking
-
-extension Service: ActionableProvider {}
-
-extension Actionable where Base: Service {
-	
-	/// Discovers the specified included services of this service.
-	public var discoverIncludedServices: Action<[CBUUID]?, Service, NSError> {
-		return base._discoverIncludedServices
-	}
-
-	/// Discovers the specified characteristics of the service.
-	public var discoverCharacteristics: Action<[CBUUID]?, Characteristic, NSError> {
-		return base._discoverCharacteristics
 	}
 }

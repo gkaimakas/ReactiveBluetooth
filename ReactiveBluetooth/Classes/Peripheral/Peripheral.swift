@@ -16,18 +16,6 @@ public class Peripheral {
 	private let central: CentralManager
 	let delegate: PeripheralObserver
 
-	/// Establishes a local connection to this peripheral
-	fileprivate let _connect: Action<[String: Any]?, Peripheral, NSError>
-
-	/// Cancels an active or pending local connection to this peripheral.
-	fileprivate let _disconnect: Action<Void, Peripheral, NSError>
-
-	/// Discovers the specified services of the peripheral.
-	fileprivate let _discoverServices: Action<[CBUUID]?, Service, NSError>
-
-	/// Retrieves the current RSSI value for the peripheral while it is connected to the central manager.
-	fileprivate let _readRSSI: Action<Void, NSNumber, NSError>
-
 	/// The name of the peripheral.
 	public let name: Property<String?>
 
@@ -89,17 +77,6 @@ public class Peripheral {
 		)
 
 		self.canSendWriteWithoutResponse = Property<Bool>(value: peripheral.canSendWriteWithoutResponse)
-
-		self._connect = Action(execute: { options in _self.connect(options: options) })
-
-		self._disconnect = Action(enabledIf: state.isConnecting.or(state.isConnected),
-		                         execute: { _ in _self.disconnect() })
-
-		self._discoverServices = Action(enabledIf: state.isConnected,
-		                               execute: { uuids in _self.discoverServices(uuids) })
-
-		self._readRSSI = Action(enabledIf: state.isConnected,
-		                       execute: { _ in _self.readRSSI() })
 		
 		_self = self
 	}
@@ -192,32 +169,4 @@ extension Peripheral: Hashable {
 	public static func ==(lhs: Peripheral, rhs: Peripheral) -> Bool {
 		return lhs.peripheral == rhs.peripheral
 	}
-}
-
-// MARK: - NonBlocking
-
-extension Peripheral: ActionableProvider {}
-
-public extension Actionable where Base: Peripheral {
-
-	/// Establishes a local connection to this peripheral
-	public var connect: Action<[String: Any]?, Peripheral, NSError> {
-		return base._connect
-	}
-
-	/// Cancels an active or pending local connection to this peripheral.
-	public var disconnect: Action<Void, Peripheral, NSError> {
-		return base._disconnect
-	}
-
-	/// Discovers the specified services of the peripheral.
-	public var discoverServices: Action<[CBUUID]?, Service, NSError> {
-		return base._discoverServices
-	}
-
-	/// Retrieves the current RSSI value for the peripheral while it is connected to the central manager.
-	public var readRSSI: Action<Void, NSNumber, NSError> {
-		return base._readRSSI
-	}
-
 }

@@ -6,7 +6,7 @@ target 'ReactiveBluetooth_Example' do
 
 	pod 'ASDKFluentExtensions'
 	pod 'ChameleonFramework/Swift', :git => 'https://github.com/ViccAlexander/Chameleon.git'
-	pod 'Texture', '2.5'
+	pod 'Texture'
 
 	target 'ReactiveBluetooth_Tests' do
 		inherit! :search_paths

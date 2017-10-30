@@ -7,15 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		130760071FA3369F00F2393C /* ScanTableNodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130760061FA3369F00F2393C /* ScanTableNodeController.swift */; };
-		1307600B1FA338F500F2393C /* DiscoveredPeripheralNodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1307600A1FA338F500F2393C /* DiscoveredPeripheralNodeCell.swift */; };
-		1307600D1FA34FED00F2393C /* DiscoveredPeripheralCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1307600C1FA34FED00F2393C /* DiscoveredPeripheralCard.swift */; };
+		130760071FA3369F00F2393C /* ScanNodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130760061FA3369F00F2393C /* ScanNodeController.swift */; };
+		1307600D1FA34FED00F2393C /* AdvertisedPeripheralNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1307600C1FA34FED00F2393C /* AdvertisedPeripheralNode.swift */; };
 		130760101FA3551E00F2393C /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1307600F1FA3551E00F2393C /* UIImage.swift */; };
-		130760121FA365FD00F2393C /* ASProgressNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130760111FA365FD00F2393C /* ASProgressNode.swift */; };
+		130760121FA365FD00F2393C /* ProgressNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130760111FA365FD00F2393C /* ProgressNode.swift */; };
 		1338EAC21FA3DD8700B2D0AB /* AsyncDisplayKit+Reactive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1338EAC11FA3DD8700B2D0AB /* AsyncDisplayKit+Reactive.swift */; };
 		1338EAC41FA3E02100B2D0AB /* NSAttributedString+Reactive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1338EAC31FA3E02100B2D0AB /* NSAttributedString+Reactive.swift */; };
+		1343F11E1FA73106006C5314 /* WrapperCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1343F11D1FA73106006C5314 /* WrapperCellNode.swift */; };
+		1343F1201FA74DE5006C5314 /* ButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1343F11F1FA74DE5006C5314 /* ButtonNode.swift */; };
+		1343F1231FA75641006C5314 /* AdvertisedPeripheralViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1343F1221FA75641006C5314 /* AdvertisedPeripheralViewModel.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
@@ -36,13 +37,15 @@
 
 /* Begin PBXFileReference section */
 		0D9219B1F5F8510FA72DB7C4 /* Pods-ReactiveBluetooth_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactiveBluetooth_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ReactiveBluetooth_Tests/Pods-ReactiveBluetooth_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		130760061FA3369F00F2393C /* ScanTableNodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanTableNodeController.swift; sourceTree = "<group>"; };
-		1307600A1FA338F500F2393C /* DiscoveredPeripheralNodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveredPeripheralNodeCell.swift; sourceTree = "<group>"; };
-		1307600C1FA34FED00F2393C /* DiscoveredPeripheralCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveredPeripheralCard.swift; sourceTree = "<group>"; };
+		130760061FA3369F00F2393C /* ScanNodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanNodeController.swift; sourceTree = "<group>"; };
+		1307600C1FA34FED00F2393C /* AdvertisedPeripheralNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisedPeripheralNode.swift; sourceTree = "<group>"; };
 		1307600F1FA3551E00F2393C /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
-		130760111FA365FD00F2393C /* ASProgressNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASProgressNode.swift; sourceTree = "<group>"; };
+		130760111FA365FD00F2393C /* ProgressNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressNode.swift; sourceTree = "<group>"; };
 		1338EAC11FA3DD8700B2D0AB /* AsyncDisplayKit+Reactive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AsyncDisplayKit+Reactive.swift"; sourceTree = "<group>"; };
 		1338EAC31FA3E02100B2D0AB /* NSAttributedString+Reactive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Reactive.swift"; sourceTree = "<group>"; };
+		1343F11D1FA73106006C5314 /* WrapperCellNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WrapperCellNode.swift; sourceTree = "<group>"; };
+		1343F11F1FA74DE5006C5314 /* ButtonNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonNode.swift; sourceTree = "<group>"; };
+		1343F1221FA75641006C5314 /* AdvertisedPeripheralViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisedPeripheralViewModel.swift; sourceTree = "<group>"; };
 		19F0B8FA7A93E777C8C891BC /* Pods-ReactiveBluetooth_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactiveBluetooth_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ReactiveBluetooth_Example/Pods-ReactiveBluetooth_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		22A2F8CF52755ACA51FD405E /* Pods_ReactiveBluetooth_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactiveBluetooth_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A389C595BDF96FA130E0372 /* ReactiveBluetooth.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ReactiveBluetooth.podspec; path = ../ReactiveBluetooth.podspec; sourceTree = "<group>"; };
@@ -51,7 +54,6 @@
 		607FACD01AFB9204008FA782 /* ReactiveBluetooth_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactiveBluetooth_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -86,9 +88,10 @@
 		130760091FA338B900F2393C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1307600A1FA338F500F2393C /* DiscoveredPeripheralNodeCell.swift */,
-				1307600C1FA34FED00F2393C /* DiscoveredPeripheralCard.swift */,
-				130760111FA365FD00F2393C /* ASProgressNode.swift */,
+				1343F11D1FA73106006C5314 /* WrapperCellNode.swift */,
+				1307600C1FA34FED00F2393C /* AdvertisedPeripheralNode.swift */,
+				130760111FA365FD00F2393C /* ProgressNode.swift */,
+				1343F11F1FA74DE5006C5314 /* ButtonNode.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -101,6 +104,14 @@
 				1338EAC31FA3E02100B2D0AB /* NSAttributedString+Reactive.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1343F1211FA7562D006C5314 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				1343F1221FA75641006C5314 /* AdvertisedPeripheralViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		607FACC71AFB9204008FA782 = {
@@ -127,15 +138,15 @@
 		607FACD21AFB9204008FA782 /* Example for ReactiveBluetooth */ = {
 			isa = PBXGroup;
 			children = (
-				1307600E1FA3550700F2393C /* Extensions */,
+				1343F1211FA7562D006C5314 /* ViewModels */,
 				130760091FA338B900F2393C /* Views */,
+				1307600E1FA3550700F2393C /* Extensions */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
-				130760061FA3369F00F2393C /* ScanTableNodeController.swift */,
+				130760061FA3369F00F2393C /* ScanNodeController.swift */,
 			);
 			name = "Example for ReactiveBluetooth";
 			path = ReactiveBluetooth;
@@ -432,15 +443,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				1343F1231FA75641006C5314 /* AdvertisedPeripheralViewModel.swift in Sources */,
 				1338EAC21FA3DD8700B2D0AB /* AsyncDisplayKit+Reactive.swift in Sources */,
-				130760121FA365FD00F2393C /* ASProgressNode.swift in Sources */,
-				130760071FA3369F00F2393C /* ScanTableNodeController.swift in Sources */,
-				1307600D1FA34FED00F2393C /* DiscoveredPeripheralCard.swift in Sources */,
+				130760121FA365FD00F2393C /* ProgressNode.swift in Sources */,
+				130760071FA3369F00F2393C /* ScanNodeController.swift in Sources */,
+				1307600D1FA34FED00F2393C /* AdvertisedPeripheralNode.swift in Sources */,
 				130760101FA3551E00F2393C /* UIImage.swift in Sources */,
 				1338EAC41FA3E02100B2D0AB /* NSAttributedString+Reactive.swift in Sources */,
+				1343F11E1FA73106006C5314 /* WrapperCellNode.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
-				1307600B1FA338F500F2393C /* DiscoveredPeripheralNodeCell.swift in Sources */,
+				1343F1201FA74DE5006C5314 /* ButtonNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

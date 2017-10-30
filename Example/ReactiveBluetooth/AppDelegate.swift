@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-		let asyncNavigationController = UINavigationController(rootViewController: ScanTableNodeController())
+		let asyncNavigationController = UINavigationController(rootViewController: ScanNodeController())
 
 		window = UIWindow()
 		window?.backgroundColor = .white
