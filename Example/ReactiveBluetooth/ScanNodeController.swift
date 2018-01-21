@@ -82,7 +82,6 @@ extension ScanNodeController: ASTableDataSource, ASTableDelegate {
 		                                                                                           left: 16,
 		                                                                                           bottom: 12,
 		                                                                                           right: 16))
-		wrapper.cornerRoundingType = .precomposited
 		return wrapper
 	}
 }

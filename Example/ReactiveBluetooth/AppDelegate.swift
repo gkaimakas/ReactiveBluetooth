@@ -18,14 +18,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-		let asyncNavigationController = UINavigationController(rootViewController: ScanNodeController())
+        let asyncNavigationController = UINavigationController(rootViewController: ScanNodeController())
 
-		window = UIWindow()
-		window?.backgroundColor = .white
-		window?.rootViewController = asyncNavigationController
-		window?.makeKeyAndVisible()
+        window = UIWindow()
+        window?.backgroundColor = .white
+        window?.rootViewController = asyncNavigationController
+        window?.makeKeyAndVisible()
 
-		ASDisableLogging()
+        ASDisableLogging()
 
         return true
     }
