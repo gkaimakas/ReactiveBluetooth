@@ -9,12 +9,12 @@ import CoreBluetooth
 import Foundation
 
 class WillRestoreStateEvent: CentralBaseEvent {
-	let dict: [String: Any]
+    let options: [CentralManager.StateRestorationOption]
 
 	init?(event: CentralManagerDelegateEvent){
 		switch event {
 		case .willRestoreState(central: let central, dict: let dict):
-			self.dict = dict
+			options = CentralManager.StateRestorationOption.parse(dictionary: dict, central: CentralManager(central: central))
 			super.init(central: central)
 		default:
 			return nil

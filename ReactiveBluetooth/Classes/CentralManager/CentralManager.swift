@@ -21,64 +21,72 @@ public class CentralManager {
 	public let isScanning: Property<Bool>
 	public let state: Property<CBManagerState>
 
-	public init(queue: DispatchQueue? = nil,
-	     options: [String: Any]? = nil) {
+	public convenience init(queue: DispatchQueue? = nil,
+	     options: Set<InitializationOption>? = nil) {
 
-		weak var _self: CentralManager!
-
-		self.discoveredPeripheralCache = SyncDiscoveredPeripheralCache()
-		self.delegate = CentralManagerObserver()
-		let central = CBCentralManager(delegate: delegate,
+		let central = CBCentralManager(delegate: nil,
 		                                queue: queue,
-		                                options: options)
+		                                options: options?.merge())
 
-		self.central = central
-
-		didStopScan = central
-			.reactive
-			.trigger(for: #selector(CBCentralManager.stopScan))
-
-		isScanning = Property(initial: central.isScanning,
-		                      then: central
-								.reactive
-								.producer(forKeyPath: #keyPath(CBCentralManager.isScanning))
-								.map { $0 as? Bool }
-								.skipNil()
-			)
-			.skipRepeats()
-
-		self.state = Property<CBManagerState>(initial: central.state,
-		                                      then: delegate
-												.events
-												.filter { $0.filter(central: central) }
-												.filter { $0.isDidUpdateStateEvent() }
-												.map { DidUpdateStateEvent(event: $0) }
-												.skipNil()
-												.map { $0.central.state })
-
-		didDiscoverPeripheral = delegate
-			.events
-			.filter { $0.filter(central: central) }
-			.filter { $0.isDidDiscoverEvent() }
-			.map { DidDiscoverEvent(event: $0) }
-			.skipNil()
-			.map { event -> DiscoveredPeripheral in
-				let peripheral = Peripheral(peripheral: event.peripheral,
-				                            central: _self)
-
-				return DiscoveredPeripheral(peripheral: peripheral,
-				                            advertismentData: event.advertismentData,
-				                            RSSI: event.RSSI)
-		}
-
-		// It updates the local cache with updates coming from `didDiscover(central:, peripheral:, advertismentData:, rssi)`
-		// It should be thread safe ()
-		discoveredPeripheralCache
-			.reactive
-			.synchronizeDiscoveredPeripherals <~ didDiscoverPeripheral
-
-		_self = self
+        self.init(central: central)
 	}
+
+    init(central: CBCentralManager) {
+
+        weak var _self: CentralManager!
+
+        self.discoveredPeripheralCache = SyncDiscoveredPeripheralCache()
+
+        self.delegate = CentralManagerObserver()
+        self.central = central
+        self.central.delegate = self.delegate
+
+        didStopScan = central
+            .reactive
+            .trigger(for: #selector(CBCentralManager.stopScan))
+
+        isScanning = Property(initial: central.isScanning,
+                              then: central
+                                .reactive
+                                .producer(forKeyPath: #keyPath(CBCentralManager.isScanning))
+                                .map { $0 as? Bool }
+                                .skipNil()
+            )
+            .skipRepeats()
+
+        self.state = Property<CBManagerState>(initial: central.state,
+                                              then: delegate
+                                                .events
+                                                .filter { $0.filter(central: central) }
+                                                .filter { $0.isDidUpdateStateEvent() }
+                                                .map { DidUpdateStateEvent(event: $0) }
+                                                .skipNil()
+                                                .map { $0.central.state })
+
+        didDiscoverPeripheral = delegate
+            .events
+            .filter { $0.filter(central: central) }
+            .filter { $0.isDidDiscoverEvent() }
+            .map { DidDiscoverEvent(event: $0) }
+            .skipNil()
+            .map { event -> DiscoveredPeripheral in
+                let peripheral = Peripheral(peripheral: event.peripheral,
+                                            central: _self)
+
+                return DiscoveredPeripheral(peripheral: peripheral,
+                                            advertismentData: event.advertismentData,
+                                            RSSI: event.RSSI)
+        }
+
+        // It updates the local cache with updates coming from `didDiscover(central:, peripheral:, advertismentData:, rssi)`
+        // It should be thread safe ()
+        discoveredPeripheralCache
+            .reactive
+            .synchronizeDiscoveredPeripherals <~ didDiscoverPeripheral
+
+        _self = self
+
+    }
 
 	/// Returns known peripherals by their identifiers.
 	public func retrievePeripherals(withIdentifiers identifiers: [UUID]) -> SignalProducer<[Peripheral], NoError> {
@@ -105,11 +113,12 @@ public class CentralManager {
 	/// Scans for peripherals that are advertising the specified services.
 	/// Duplicates are ignored. Please make sure that the central is `poweredOn` before
 	/// calling `scanForPeripherals`
-	public func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]? = nil) -> SignalProducer<DiscoveredPeripheral, NoError> {
+	public func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?,
+                                   options: Set<ScanOption>? = nil) -> SignalProducer<DiscoveredPeripheral, NoError> {
 		let resultProducer = SignalProducer(didDiscoverPeripheral)
 		
 		let producer = SignalProducer<Void, NoError> {
-				self.central.scanForPeripherals(withServices: serviceUUIDs, options: options)
+				self.central.scanForPeripherals(withServices: serviceUUIDs, options: options?.merge())
 			}
 			.then(resultProducer)
 			.take(until: didStopScan)
@@ -129,7 +138,7 @@ public class CentralManager {
 
 	/// Establishes a local connection to a peripheral.
 	internal func connect(to peripheral: Peripheral,
-	                      options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
+	                      options: Set<Peripheral.ConnectionOption>? = nil) -> SignalProducer<Peripheral, NSError> {
 
 		let signal = delegate
 			.events
@@ -151,7 +160,7 @@ public class CentralManager {
 			}
 
 		let producer = SignalProducer<Void, NSError> {
-				self.central.connect(peripheral.peripheral, options: options)
+				self.central.connect(peripheral.peripheral, options: options?.merge())
 			}
 			.then(resultProducer)
 

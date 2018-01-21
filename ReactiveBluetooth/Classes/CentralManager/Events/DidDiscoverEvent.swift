@@ -10,7 +10,7 @@ import Foundation
 
 class DidDiscoverEvent: CentralBaseEvent {
 	let peripheral: CBPeripheral
-	let advertismentData: [String: Any]
+	let advertismentData: [Peripheral.AdvertismentData]
 	let RSSI: NSNumber
 	
 	init?(event: CentralManagerDelegateEvent) {
@@ -20,7 +20,7 @@ class DidDiscoverEvent: CentralBaseEvent {
 		                  advertismentData: let advertismentData,
 		                  RSSI: let RSSI):
 			self.peripheral = peripheral
-			self.advertismentData = advertismentData
+			self.advertismentData = Peripheral.AdvertismentData.parse(dictionary: advertismentData)
 			self.RSSI = RSSI
 			super.init(central: central)
 		default:

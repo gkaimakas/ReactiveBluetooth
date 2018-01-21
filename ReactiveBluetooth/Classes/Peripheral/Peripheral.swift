@@ -82,7 +82,7 @@ public class Peripheral {
 	}
 
 	/// Establishes a local connection to this peripheral
-	public func connect(options: [String: Any]? = nil) -> SignalProducer<Peripheral, NSError> {
+	public func connect(options: Set<ConnectionOption>? = nil) -> SignalProducer<Peripheral, NSError> {
 		return central.connect(to: self, options: options)
 	}
 

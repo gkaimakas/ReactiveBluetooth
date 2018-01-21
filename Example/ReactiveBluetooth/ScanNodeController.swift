@@ -34,7 +34,7 @@ class ScanNodeController: ASViewController<ASTableNode> {
 			.flatMap(.latest) { _ -> SignalProducer<DiscoveredPeripheral, NoError> in
 				return self.centralManager
 					.scanForPeripherals(withServices: nil,
-					                    options: [CBCentralManagerScanOptionAllowDuplicatesKey: true as Any] as [String: Any]?)
+					                    options: [.allowDuplicates(true)])
 
 			}
 			.map { AdvertisedPeripheralViewModel(peripheral: $0) }

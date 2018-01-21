@@ -12,14 +12,14 @@ import ReactiveSwift
 import Result
 
 public class DiscoveredPeripheral {
-	let _advertismentData: MutableProperty<[String: Any]>
+	let _advertismentData: MutableProperty<[Peripheral.AdvertismentData]>
 	let _RSSI: MutableProperty<NSNumber>
 
 	public let peripheral: Peripheral
-	public let advertismentData: Property<[String: Any]>
+	public let advertismentData: Property<[Peripheral.AdvertismentData]>
 	public let RSSI: Property<NSNumber>
 
-	init(peripheral: Peripheral, advertismentData: [String: Any], RSSI: NSNumber) {
+	init(peripheral: Peripheral, advertismentData: [Peripheral.AdvertismentData], RSSI: NSNumber) {
 		self.peripheral = peripheral
 		self._advertismentData = MutableProperty(advertismentData)
 		self._RSSI = MutableProperty(RSSI)

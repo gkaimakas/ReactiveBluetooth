@@ -17,7 +17,7 @@ class AdvertisedPeripheralViewModel {
 	let peripheral: DiscoveredPeripheral
 
 	let state: Property<CBPeripheralState>
-	let advertismentData: Property<[String: Any]>
+	let advertismentData: Property<[Peripheral.AdvertismentData]>
 	let RSSI: Property<NSNumber>
 
 	let toggleConnection: Action<Void, Void, NSError>
