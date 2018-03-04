@@ -77,21 +77,22 @@ extension Reactive where Base: CBPeripheral {
         return services
     }
 
-    public var canSendWriteWithoutResponse: Property<Bool> {
-        guard let canSendWriteWithoutResponse = objc_getAssociatedObject(base, &CBPeripheral.Associations.canSendWriteWithoutResponse) as? Property<Bool> else {
-            let canSendWriteWithoutResponse = Property(initial: base.canSendWriteWithoutResponse,
-                                    then: producer(forKeyPath: #keyPath(CBPeripheral.canSendWriteWithoutResponse))
-                                        .filterMap { $0 as? Bool })
+    public var discovered: CBPeripheral.Discovered {
+        get {
+            guard let discovered = objc_getAssociatedObject(base, &CBPeripheral.Associations.discovered) as? CBPeripheral.Discovered else {
 
-            objc_setAssociatedObject(base,
-                                     &CBPeripheral.Associations.canSendWriteWithoutResponse,
-                                     canSendWriteWithoutResponse,
-                                     objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                let discovered = CBPeripheral.Discovered()
 
-            return canSendWriteWithoutResponse
+                objc_setAssociatedObject(base,
+                                         &CBPeripheral.Associations.discovered,
+                                         discovered,
+                                         objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
+                return discovered
+            }
+
+            return discovered
         }
-        return canSendWriteWithoutResponse
     }
 
     /// Establishes a local connection to this peripheral

@@ -12,12 +12,18 @@ import Result
 
 extension CBCentralManager {
     internal class ReactiveDelegate: NSObject, CBCentralManagerDelegate {
+        internal let cache: CBPeripheral.Discovered.Cache
         internal let event: Signal<CBCentralManager.DelegateEvent, NoError>
         private let eventObserver: Signal<CBCentralManager.DelegateEvent, NoError>.Observer
 
         override internal init() {
+            cache = CBPeripheral.Discovered.Cache()
             (event, eventObserver) = Signal<CBCentralManager.DelegateEvent, NoError>.pipe()
+            
             super.init()
+
+            cache.reactive.update <~ event
+                .filterMap { $0.didDiscoverPeripheral }
         }
 
         func centralManagerDidUpdateState(_ central: CBCentralManager) {

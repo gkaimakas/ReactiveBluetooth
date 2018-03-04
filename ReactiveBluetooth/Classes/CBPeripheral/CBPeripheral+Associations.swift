@@ -15,6 +15,6 @@ extension CBPeripheral {
         internal static var identifier = "com.gkaimakas.ReactiveCoreBluetooth.CBPeripheral.identifier"
         internal static var state = "com.gkaimakas.ReactiveCoreBluetooth.CBPeripheral.state"
         internal static var services = "com.gkaimakas.ReactiveCoreBluetooth.CBPeripheral.services"
-        internal static var canSendWriteWithoutResponse = "com.gkaimakas.ReactiveCoreBluetooth.CBPeripheral.canSendWriteWithoutResponse"
+        internal static var discovered = "com.gkaimakas.ReactiveCoreBluetooth.CBPeripheral.discovered"
     }
 }
