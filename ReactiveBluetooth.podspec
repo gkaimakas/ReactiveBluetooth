@@ -11,6 +11,7 @@ s.homepage         = 'https://github.com/gkaimakas/ReactiveBluetooth'
 s.license          = { :type => 'MIT', :file => 'LICENSE' }
 s.author           = { 'gkaimakas' => 'gkaimakas@gmail.com' }
 s.source           = { :git => 'https://github.com/gkaimakas/ReactiveBluetooth.git', :tag => s.version.to_s }
+s.swift_version    = '4.0'
 
 s.ios.deployment_target = '10.0'
 

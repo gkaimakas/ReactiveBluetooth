@@ -5,6 +5,8 @@ inhibit_all_warnings!
 target 'ReactiveBluetooth_Example' do
   pod 'ReactiveBluetooth', :path => '../'
 
+  pod 'Swinject'
+
   target 'ReactiveBluetooth_Tests' do
     inherit! :search_paths
 

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		139DA02C204E87B900D852E1 /* CentralViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139DA02B204E87B900D852E1 /* CentralViewModel.swift */; };
+		139DA02E204E890D00D852E1 /* NSObject+DI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139DA02D204E890D00D852E1 /* NSObject+DI.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -30,6 +32,8 @@
 /* Begin PBXFileReference section */
 		0C48DB5087FF91F7D62973E5 /* Pods-ReactiveBluetooth_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactiveBluetooth_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-ReactiveBluetooth_Example/Pods-ReactiveBluetooth_Example.release.xcconfig"; sourceTree = "<group>"; };
 		12FE6F962E3401E6E2FF4879 /* Pods_ReactiveBluetooth_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactiveBluetooth_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		139DA02B204E87B900D852E1 /* CentralViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralViewModel.swift; sourceTree = "<group>"; };
+		139DA02D204E890D00D852E1 /* NSObject+DI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+DI.swift"; sourceTree = "<group>"; };
 		20C6ABAE2EFC5A8BD28A2505 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		34D8411D66A87C57A0A37C69 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		3F09B39C4D40BDFBCC19F451 /* ReactiveBluetooth.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ReactiveBluetooth.podspec; path = ../ReactiveBluetooth.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -69,6 +73,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		139DA027204E871700D852E1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		139DA028204E872200D852E1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				139DA02B204E87B900D852E1 /* CentralViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		139DA029204E872800D852E1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		139DA02A204E873300D852E1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				139DA02D204E890D00D852E1 /* NSObject+DI.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
@@ -93,6 +127,10 @@
 		607FACD21AFB9204008FA782 /* Example for ReactiveBluetooth */ = {
 			isa = PBXGroup;
 			children = (
+				139DA02A204E873300D852E1 /* Extensions */,
+				139DA029204E872800D852E1 /* Views */,
+				139DA028204E872200D852E1 /* ViewModels */,
+				139DA027204E871700D852E1 /* Models */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
@@ -215,10 +253,12 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = C8477367KP;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = C8477367KP;
 						LastSwiftMigration = 0900;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -299,6 +339,7 @@
 				"${BUILT_PRODUCTS_DIR}/ReactiveCocoa/ReactiveCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/ReactiveSwift/ReactiveSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/Swinject/Swinject.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -306,6 +347,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Swinject.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -385,7 +427,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				139DA02E204E890D00D852E1 /* NSObject+DI.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				139DA02C204E87B900D852E1 /* CentralViewModel.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -532,6 +576,7 @@
 			baseConfigurationReference = B8E43A13C767A94C5B10E579 /* Pods-ReactiveBluetooth_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = C8477367KP;
 				INFOPLIST_FILE = ReactiveBluetooth/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -547,6 +592,7 @@
 			baseConfigurationReference = 0C48DB5087FF91F7D62973E5 /* Pods-ReactiveBluetooth_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = C8477367KP;
 				INFOPLIST_FILE = ReactiveBluetooth/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -561,6 +607,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1E2E37389EC9EC9C09037B6 /* Pods-ReactiveBluetooth_Tests.debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = C8477367KP;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -582,6 +629,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ECF0C9F1AC0842A0AA52B1D9 /* Pods-ReactiveBluetooth_Tests.release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = C8477367KP;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",

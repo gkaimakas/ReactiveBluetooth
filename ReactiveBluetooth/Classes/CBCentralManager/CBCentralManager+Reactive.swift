@@ -34,8 +34,7 @@ extension Reactive where Base: CBCentralManager {
     public var state: Property<CBManagerState> {
         guard let state = objc_getAssociatedObject(base, &CBCentralManager.Associations.state) as? Property<CBManagerState> else {
             let state = Property(initial: base.state,
-                                 then: producer(forKeyPath: #keyPath(CBCentralManager.state))
-                                    .filterMap { $0 as? CBManagerState }
+                                 then: didUpdateState
                 )
                 .skipRepeats()
 
@@ -70,22 +69,31 @@ extension Reactive where Base: CBCentralManager {
     /// Scans for peripherals that are advertising the specified services.
     /// Duplicates are ignored. Please make sure that the central is `poweredOn` before
     /// calling `scanForPeripherals`
-    /// When the producer gets disposed the scan stops
     public func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?,
-                                   options: Set<CBCentralManager.ScanOption>? = nil)
+                                   options: Set<CBCentralManager.ScanOption>?)
         -> SignalProducer<(peripheral: CBPeripheral, advertismentData: Set<CBPeripheral.AdvertismentData>, RSSI: NSNumber), NoError> {
 
-        let resultProducer = SignalProducer(didDiscoverPeripheral)
+            let resultProducer = SignalProducer(didDiscoverPeripheral)
 
-        return SignalProducer<Void, NoError> { observer, disposable in
+            let stateProducer = state
+                .producer
+                .filter { $0 == .poweredOn }
+                .take(first: 1)
+
+            let scanProducer = SignalProducer<Void, NoError> { observer, disposable in
+                print(options?.merge())
                 self.base.scanForPeripherals(withServices: serviceUUIDs, options: options?.merge())
                 observer.sendCompleted()
             }
-            .take(until: didStopScan)
-            .then(resultProducer)
-            .on(value: { bundle in
-                bundle.peripheral.centralManager = self.base
-            })
+
+            return stateProducer
+                .then(scanProducer)
+                .take(until: didStopScan)
+                .then(resultProducer)
+                .on(value: { bundle in
+                    bundle.peripheral.centralManager = self.base
+                })
+                .on(disposed: { self.base.stopScan() })
     }
 
     /// Asks the central manager to stop scanning for peripherals.
@@ -93,7 +101,6 @@ extension Reactive where Base: CBCentralManager {
         return SignalProducer<Void, NoError> { observer, disposable in
             self.base.stopScan()
             observer.sendCompleted()
-
         }
     }
 
@@ -190,11 +197,13 @@ extension Reactive where Base: CBCentralManager {
             .filterMap { $0.didUpdateState?.state }
     }
 
-    public var willRestoreState: Signal<[String: Any], NoError> {
+    public var willRestoreState: Signal<Set<CBCentralManager.RestorationOption>, NoError> {
         return delegate
             .event
             .filter { $0.filter(central: self.base) }
             .filterMap { $0.willRestoreState }
+            .map { CBCentralManager.RestorationOption.parse(dictionary: $0) }
+            .map { Set($0) }
     }
 
     public var didDiscoverPeripheral: Signal<(peripheral: CBPeripheral, advertismentData: Set<CBPeripheral.AdvertismentData>, RSSI: NSNumber), NoError> {

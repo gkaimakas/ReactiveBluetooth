@@ -6,16 +6,30 @@
 //  Copyright (c) 2018 gkaimakas. All rights reserved.
 //
 
+import CoreBluetooth
+import ReactiveBluetooth
+import ReactiveCocoa
+import ReactiveSwift
+import Result
+import Swinject
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    let container = Container()
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
+        container.register(CentralViewModel.self) { _ in
+            return CentralViewModel(central: CBCentralManager.init(delegate: nil,
+                                                                   queue: nil,
+                                                                   options: [.showPowerAlert(true)]))
+        }.inObjectScope(.container)
+
         return true
     }
 
