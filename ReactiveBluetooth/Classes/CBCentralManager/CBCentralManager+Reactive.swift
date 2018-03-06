@@ -79,11 +79,6 @@ extension Reactive where Base: CBCentralManager {
 
         return SignalProducer<Void, NoError> { observer, disposable in
                 self.base.scanForPeripherals(withServices: serviceUUIDs, options: options?.merge())
-
-                disposable.observeEnded {
-                    self.base.stopScan()
-                }
-
                 observer.sendCompleted()
             }
             .take(until: didStopScan)
@@ -97,7 +92,6 @@ extension Reactive where Base: CBCentralManager {
     public func stopScan() -> SignalProducer<Void, NoError> {
         return SignalProducer<Void, NoError> { observer, disposable in
             self.base.stopScan()
-            observer.send(value: ())
             observer.sendCompleted()
 
         }
