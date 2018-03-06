@@ -83,6 +83,8 @@ extension Reactive where Base: CBCentralManager {
                 disposable.observeEnded {
                     self.base.stopScan()
                 }
+
+                observer.sendCompleted()
             }
             .take(until: didStopScan)
             .then(resultProducer)
@@ -93,7 +95,12 @@ extension Reactive where Base: CBCentralManager {
 
     /// Asks the central manager to stop scanning for peripherals.
     public func stopScan() -> SignalProducer<Void, NoError> {
-        return SignalProducer<Void, NoError> { self.base.stopScan() }
+        return SignalProducer<Void, NoError> { observer, disposable in
+            self.base.stopScan()
+            observer.send(value: ())
+            observer.sendCompleted()
+
+        }
     }
 
     /// Establishes a local connection to a peripheral.
