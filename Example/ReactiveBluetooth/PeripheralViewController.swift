@@ -16,19 +16,20 @@ import UIKit
 public final class PeripheralViewController: UIViewController {
     var viewModel: CBPeripheral!
     var toggleConnectiom: Action<Void, CBPeripheral, NSError>!
+    var fetchServices: Action<Void, Void, NSError>!
+    public var dataSource: Property<[CBService]>!
 
+    @IBOutlet weak var tableView: UITableView!
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        let enableToggleConnection = viewModel
+        dataSource = viewModel
             .reactive
-            .state
-            .map({ state -> Bool in
-                switch state {
-                case .connected, .disconnected: return true
-                case .connecting, .disconnecting: return false
-                }
-            })
+            .services
+            .map({ Array($0) })
+
+        tableView.dataSource = self
+        tableView.delegate = self
 
         toggleConnectiom = Action<Void, CBPeripheral, NSError>(execute: { _ -> SignalProducer<CBPeripheral, NSError> in
 
@@ -41,7 +42,12 @@ public final class PeripheralViewController: UIViewController {
                                                         }
         })
 
-        print(viewModel.responds(to: #keyPath(CBPeripheral.state)))
+        fetchServices = Action<Void, Void, NSError>(execute: { _ -> SignalProducer<Void, NSError> in
+            return self.viewModel
+                .reactive
+                .discoverServices(nil)
+                .map { _ in return () }
+        })
 
         navigationItem.title = viewModel.name ?? "Not Available"
         navigationItem.prompt = viewModel.identifier.uuidString
@@ -61,5 +67,44 @@ public final class PeripheralViewController: UIViewController {
         }
         navigationItem.rightBarButtonItem!.reactive.pressed = CocoaAction(toggleConnectiom)
         navigationItem.reactive.prompt <~ viewModel.reactive.identifier.map { $0.uuidString }
+
+        dataSource
+            .producer
+            .on(value: { _ in self.tableView.reloadData() })
+            .start()
     }
+}
+
+extension PeripheralViewController: UITableViewDataSource {
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataSource.value.count
+    }
+
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
+        cell.textLabel?.text = dataSource.value[indexPath.item].uuid.uuidString
+        cell.accessoryType = .disclosureIndicator
+        return cell
+    }
+}
+
+extension PeripheralViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = ActionSectionView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 64))
+        view.titleLabel.text = "Services"
+        view.actionButton.setTitle("Discover", for: .normal)
+        view.actionButton.setTitle("Please wait...", for: .disabled)
+        view.actionButton.reactive.action = CocoaAction(fetchServices)
+        return view
+    }
+
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 64
+    }
+
+
 }

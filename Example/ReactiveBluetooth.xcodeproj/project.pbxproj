@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		13425906204FE2CC00BBFA10 /* PeripheralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13425905204FE2CC00BBFA10 /* PeripheralViewController.swift */; };
+		1342590820500B2000BBFA10 /* ActionSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342590720500B2000BBFA10 /* ActionSectionView.swift */; };
+		1342590B20500B8900BBFA10 /* ActionSectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1342590A20500B8900BBFA10 /* ActionSectionView.xib */; };
 		1342A3DE204ECB8F00C26B16 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342A3DD204ECB8F00C26B16 /* UIView.swift */; };
 		1342A3E4204EEACC00C26B16 /* PeripheralOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342A3E3204EEACC00C26B16 /* PeripheralOverviewCell.swift */; };
 		1342A3E6204EEAD500C26B16 /* PeripheralOverviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1342A3E5204EEAD500C26B16 /* PeripheralOverviewCell.xib */; };
@@ -39,6 +41,8 @@
 		0C48DB5087FF91F7D62973E5 /* Pods-ReactiveBluetooth_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactiveBluetooth_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-ReactiveBluetooth_Example/Pods-ReactiveBluetooth_Example.release.xcconfig"; sourceTree = "<group>"; };
 		12FE6F962E3401E6E2FF4879 /* Pods_ReactiveBluetooth_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactiveBluetooth_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		13425905204FE2CC00BBFA10 /* PeripheralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralViewController.swift; sourceTree = "<group>"; };
+		1342590720500B2000BBFA10 /* ActionSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionSectionView.swift; sourceTree = "<group>"; };
+		1342590A20500B8900BBFA10 /* ActionSectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActionSectionView.xib; sourceTree = "<group>"; };
 		1342A3DD204ECB8F00C26B16 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		1342A3E3204EEACC00C26B16 /* PeripheralOverviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralOverviewCell.swift; sourceTree = "<group>"; };
 		1342A3E5204EEAD500C26B16 /* PeripheralOverviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeripheralOverviewCell.xib; sourceTree = "<group>"; };
@@ -85,6 +89,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1342590920500B2600BBFA10 /* ActionSectionView */ = {
+			isa = PBXGroup;
+			children = (
+				1342590720500B2000BBFA10 /* ActionSectionView.swift */,
+				1342590A20500B8900BBFA10 /* ActionSectionView.xib */,
+			);
+			path = ActionSectionView;
+			sourceTree = "<group>";
+		};
 		1342A3DC204ECB8400C26B16 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +142,7 @@
 		139DA029204E872800D852E1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1342590920500B2600BBFA10 /* ActionSectionView */,
 				1342A3E1204EEAB500C26B16 /* TableView */,
 				1342A3DC204ECB8400C26B16 /* Extensions */,
 				1342A3E9204EECDB00C26B16 /* ActionButton.swift */,
@@ -331,6 +345,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
+				1342590B20500B8900BBFA10 /* ActionSectionView.xib in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				1342A3E6204EEAD500C26B16 /* PeripheralOverviewCell.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
@@ -478,6 +493,7 @@
 				1342A3E8204EEAFF00C26B16 /* UITableViewCell.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				13425906204FE2CC00BBFA10 /* PeripheralViewController.swift in Sources */,
+				1342590820500B2000BBFA10 /* ActionSectionView.swift in Sources */,
 				1342A3EA204EECDB00C26B16 /* ActionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

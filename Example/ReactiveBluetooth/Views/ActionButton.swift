@@ -7,10 +7,13 @@
 //
 
 import Foundation
+import ReactiveCocoa
+import ReactiveSwift
+import Result
 import UIKit
 
 public class ActionButton: UIButton {
-    private let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
+    fileprivate let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,7 +31,7 @@ public class ActionButton: UIButton {
     private func configure() {
         addSubview(activityIndicator)
         activityIndicator.activityIndicatorViewStyle = .gray
-        activityIndicator.startAnimating()
+        activityIndicator.hidesWhenStopped = true
         activityIndicator.color = tintColor
 
         bringSubview(toFront: activityIndicator)
@@ -43,5 +46,20 @@ public class ActionButton: UIButton {
 
         layer.cornerRadius = self.frame.height/2
         activityIndicator.frame = CGRect(x: frame.width-28, y: (frame.height - 24)/2, width: 24, height: 24)
+    }
+}
+
+extension Reactive where Base: ActionButton {
+    public var action: CocoaAction<Base>? {
+        get {
+            return self.pressed
+        }
+
+        nonmutating set {
+            self.pressed = newValue
+            if let _action = newValue {
+                base.activityIndicator.reactive.isAnimating <~ _action.isExecuting.producer
+            }
+        }
     }
 }
