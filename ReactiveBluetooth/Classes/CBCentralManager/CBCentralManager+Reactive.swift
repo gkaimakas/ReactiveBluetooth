@@ -34,7 +34,9 @@ extension Reactive where Base: CBCentralManager {
     public var state: Property<CBManagerState> {
         guard let state = objc_getAssociatedObject(base, &CBCentralManager.Associations.state) as? Property<CBManagerState> else {
             let state = Property(initial: base.state,
-                                 then: didUpdateState
+                                 then: producer(forKeyPath: #keyPath(CBCentralManager.state))
+                                    .filterMap({ $0 as? Int})
+                                    .filterMap({ CBManagerState(rawValue: $0)})
                 )
                 .skipRepeats()
 
@@ -81,7 +83,6 @@ extension Reactive where Base: CBCentralManager {
                 .take(first: 1)
 
             let scanProducer = SignalProducer<Void, NoError> { observer, disposable in
-                print(options?.merge())
                 self.base.scanForPeripherals(withServices: serviceUUIDs, options: options?.merge())
                 observer.sendCompleted()
             }
@@ -131,10 +132,7 @@ extension Reactive where Base: CBCentralManager {
     /// Cancels an active or pending local connection to a peripheral.
     public func cancelPeripheralConnection(_ peripheral: CBPeripheral) -> SignalProducer<CBPeripheral, NSError> {
 
-        let resultProducer = SignalProducer<CBCentralManager.DelegateEvent, NoError>(delegate.event)
-            .filter { $0.filter(central: self.base) }
-            .filterMap { $0.didDisconnect }
-            .filter { $0.peripheral == peripheral }
+        let resultProducer = SignalProducer<(peripheral: CBPeripheral, error: Error?), NoError>(didDisconnectPeripheral)
             .take(first: 1)
             .flatMap(.latest) { event -> SignalProducer<CBPeripheral, NSError> in
                 if let error = event.error as NSError? {

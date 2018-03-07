@@ -39,7 +39,6 @@ extension CBCentralManager {
                             advertisementData: [String : Any],
                             rssi RSSI: NSNumber) {
 
-            print(peripheral.name, peripheral.identifier.uuidString)
             eventObserver.send(value: .didDiscover(central: central,
                                                    peripheral: peripheral,
                                                    advertismentData: CBPeripheral.AdvertismentData.parse(advertisementData),

@@ -19,6 +19,7 @@ public final class CentralViewModel {
 
     public let discoveredPeripherals: Property<[CBPeripheral]>
 
+    public let state: Property<CBManagerState>
     public let isScanning: Property<Bool>
     public let startScan: Action<Void, CBPeripheral, NoError>
     public let stopScan: Action<Void, Void, NoError>
@@ -28,6 +29,7 @@ public final class CentralViewModel {
         self._discoveredPeripherals = MutableProperty([])
         self.discoveredPeripherals = Property(_discoveredPeripherals)
         self.isScanning = central.reactive.isScanning
+        self.state = central.reactive.state
 
         startScan = Action(enabledIf: central.reactive.isScanning.negate(), execute: { _ in
             return central

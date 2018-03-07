@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Scan View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="ReactiveBluetooth_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ScanViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="vXZ-lx-hvc" customClass="ScanViewController" customModule="ReactiveBluetooth_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -34,14 +34,35 @@
                             <constraint firstAttribute="trailing" secondItem="GfQ-0k-6Py" secondAttribute="trailing" id="anS-33-eX4"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="wzm-V0-vfY"/>
+                    <navigationItem key="navigationItem" id="wzm-V0-vfY">
+                        <barButtonItem key="backBarButtonItem" title=" " id="xSg-e2-n3k"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="GfQ-0k-6Py" id="pyu-EU-Ifb"/>
+                        <segue destination="lDd-LD-zA3" kind="show" identifier="PeripheralViewController" id="cgi-Bd-WMm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="476" y="133.5832083958021"/>
+        </scene>
+        <!--Peripheral View Controller-->
+        <scene sceneID="bwl-tp-HXu">
+            <objects>
+                <viewController storyboardIdentifier="PeripheralViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="lDd-LD-zA3" customClass="PeripheralViewController" customModule="ReactiveBluetooth_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="DKA-IF-9G1"/>
+                        <viewControllerLayoutGuide type="bottom" id="6Pe-q0-RvG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Hk0-th-mxI">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Jry-ad-VUn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1342" y="134"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="n1i-Rx-q3e">

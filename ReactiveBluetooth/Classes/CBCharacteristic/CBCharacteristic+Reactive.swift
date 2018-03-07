@@ -130,6 +130,9 @@ extension Reactive where Base: CBCharacteristic {
             .reactive
             .setNotifyValue(enabled, for: base)
     }
+}
+
+extension Reactive where Base: CBCharacteristic {
 
     public var didUpdateNotificationState: Signal<(isNotifying: Bool, error: Error?), NoError> {
 

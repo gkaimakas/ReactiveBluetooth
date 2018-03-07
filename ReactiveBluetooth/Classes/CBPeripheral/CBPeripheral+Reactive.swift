@@ -46,7 +46,11 @@ extension Reactive where Base: CBPeripheral {
 
     public var state: Property<CBPeripheralState> {
         guard let state = objc_getAssociatedObject(base, &CBPeripheral.Associations.state) as? Property<CBPeripheralState> else {
-            let state = Property(value: base.state)
+            let state = Property<CBPeripheralState>(initial: base.state,
+                                                    then: producer(forKeyPath: #keyPath(CBPeripheral.state))
+                                                        .filterMap({ $0 as? Int })
+                                                        .filterMap({ CBPeripheralState(rawValue: $0)})
+            )
 
             objc_setAssociatedObject(base,
                                      &CBPeripheral.Associations.state,

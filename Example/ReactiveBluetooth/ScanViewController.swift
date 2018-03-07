@@ -13,7 +13,7 @@ import ReactiveSwift
 import Result
 import UIKit
 
-class ViewController: UIViewController {
+class ScanViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     private var viewModel: CentralViewModel!
@@ -28,29 +28,18 @@ class ViewController: UIViewController {
 
         dataSource = viewModel.discoveredPeripherals
 
-        viewModel
-            .isScanning
-            .producer
-            .startWithValues { value in
-                print(value)
-        }
-
-//        serialDisposable.inner = viewModel
-//            .startScan
-//            .apply()
-//            .take(until: SignalProducer.timer(interval: DispatchTimeInterval.seconds(10), on: QueueScheduler.main)
-//                .take(first: 1)
-//                .map { _ in return  () }
-//            )
-//            .start()
-
         viewModel.discoveredPeripherals
             .producer
             .startWithValues { _ in
                 self.tableView.reloadData()
         }
 
+        tableView.estimatedRowHeight = 80
+        tableView.rowHeight = UITableViewAutomaticDimension
         tableView.dataSource = self
+        tableView.delegate = self
+
+        tableView.register(PeripheralOverviewCell.nib, forCellReuseIdentifier: PeripheralOverviewCell.identifier)
 
         let toggleScan = Action<Void, Void, NoError> { _ -> SignalProducer<Void, NoError> in
             return self.viewModel
@@ -67,7 +56,7 @@ class ViewController: UIViewController {
                         return self.viewModel
                             .startScan
                             .apply()
-                            .take(until: SignalProducer.timer(interval: DispatchTimeInterval.seconds(20), on: QueueScheduler.main)
+                            .take(until: SignalProducer.timer(interval: DispatchTimeInterval.seconds(10), on: QueueScheduler.main)
                                 .take(first: 1)
                                 .map { _ in return  () }
                             )
@@ -77,17 +66,35 @@ class ViewController: UIViewController {
             }
         }
 
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "scan", style: .plain, target: nil, action: nil)
-        navigationItem.leftBarButtonItem?.reactive.pressed = CocoaAction(toggleScan)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Scan", style: .plain, target: nil, action: nil)
+        navigationItem.rightBarButtonItem?.reactive.pressed = CocoaAction(toggleScan)
+        navigationItem.title = "ReactiveBluetooth"
+        navigationItem.backBarButtonItem?.title = ""
+
+        navigationItem.reactive.prompt <~ viewModel
+            .isScanning
+            .producer
+            .map { return $0 ? "Scanning..." : nil }
+            .take(during: reactive.lifetime)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
+        if segue.identifier == "PeripheralViewController",
+            let viewController = segue.destination as? PeripheralViewController,
+            let peripheral = sender as? CBPeripheral {
+
+            viewController.viewModel = peripheral
+        }
+    }
 }
 
-extension ViewController: UITableViewDataSource {
+extension ScanViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -97,10 +104,18 @@ extension ViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        let peripheral = viewModel.discoveredPeripherals.value[indexPath.item]
-
-        cell.textLabel!.text = peripheral.name ?? peripheral.identifier.uuidString
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
+        cell.textLabel?.text = dataSource.value[indexPath.item].name ?? "Not Available"
+        cell.detailTextLabel?.text = dataSource.value[indexPath.item].identifier.uuidString
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let peripheral = dataSource.value[indexPath.item]
+        performSegue(withIdentifier: "PeripheralViewController", sender: peripheral)
+    }
+}
+
+extension ScanViewController: UITableViewDelegate {
 }

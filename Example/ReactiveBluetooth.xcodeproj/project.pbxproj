@@ -7,10 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13425906204FE2CC00BBFA10 /* PeripheralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13425905204FE2CC00BBFA10 /* PeripheralViewController.swift */; };
+		1342A3DE204ECB8F00C26B16 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342A3DD204ECB8F00C26B16 /* UIView.swift */; };
+		1342A3E4204EEACC00C26B16 /* PeripheralOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342A3E3204EEACC00C26B16 /* PeripheralOverviewCell.swift */; };
+		1342A3E6204EEAD500C26B16 /* PeripheralOverviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1342A3E5204EEAD500C26B16 /* PeripheralOverviewCell.xib */; };
+		1342A3E8204EEAFF00C26B16 /* UITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342A3E7204EEAFF00C26B16 /* UITableViewCell.swift */; };
+		1342A3EA204EECDB00C26B16 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342A3E9204EECDB00C26B16 /* ActionButton.swift */; };
 		139DA02C204E87B900D852E1 /* CentralViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139DA02B204E87B900D852E1 /* CentralViewModel.swift */; };
 		139DA02E204E890D00D852E1 /* NSObject+DI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139DA02D204E890D00D852E1 /* NSObject+DI.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
+		607FACD81AFB9204008FA782 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ScanViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
@@ -32,6 +38,12 @@
 /* Begin PBXFileReference section */
 		0C48DB5087FF91F7D62973E5 /* Pods-ReactiveBluetooth_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactiveBluetooth_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-ReactiveBluetooth_Example/Pods-ReactiveBluetooth_Example.release.xcconfig"; sourceTree = "<group>"; };
 		12FE6F962E3401E6E2FF4879 /* Pods_ReactiveBluetooth_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactiveBluetooth_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		13425905204FE2CC00BBFA10 /* PeripheralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralViewController.swift; sourceTree = "<group>"; };
+		1342A3DD204ECB8F00C26B16 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		1342A3E3204EEACC00C26B16 /* PeripheralOverviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralOverviewCell.swift; sourceTree = "<group>"; };
+		1342A3E5204EEAD500C26B16 /* PeripheralOverviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeripheralOverviewCell.xib; sourceTree = "<group>"; };
+		1342A3E7204EEAFF00C26B16 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
+		1342A3E9204EECDB00C26B16 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		139DA02B204E87B900D852E1 /* CentralViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentralViewModel.swift; sourceTree = "<group>"; };
 		139DA02D204E890D00D852E1 /* NSObject+DI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+DI.swift"; sourceTree = "<group>"; };
 		20C6ABAE2EFC5A8BD28A2505 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -40,7 +52,7 @@
 		607FACD01AFB9204008FA782 /* ReactiveBluetooth_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactiveBluetooth_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		607FACD71AFB9204008FA782 /* ScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -73,6 +85,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1342A3DC204ECB8400C26B16 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1342A3DD204ECB8F00C26B16 /* UIView.swift */,
+				1342A3E7204EEAFF00C26B16 /* UITableViewCell.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1342A3E1204EEAB500C26B16 /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+				1342A3E2204EEABE00C26B16 /* Cell */,
+			);
+			path = TableView;
+			sourceTree = "<group>";
+		};
+		1342A3E2204EEABE00C26B16 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				1342A3E3204EEACC00C26B16 /* PeripheralOverviewCell.swift */,
+				1342A3E5204EEAD500C26B16 /* PeripheralOverviewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		139DA027204E871700D852E1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -91,6 +129,9 @@
 		139DA029204E872800D852E1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1342A3E1204EEAB500C26B16 /* TableView */,
+				1342A3DC204ECB8400C26B16 /* Extensions */,
+				1342A3E9204EECDB00C26B16 /* ActionButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -132,11 +173,12 @@
 				139DA028204E872200D852E1 /* ViewModels */,
 				139DA027204E871700D852E1 /* Models */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				607FACD71AFB9204008FA782 /* ScanViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
+				13425905204FE2CC00BBFA10 /* PeripheralViewController.swift */,
 			);
 			name = "Example for ReactiveBluetooth";
 			path = ReactiveBluetooth;
@@ -290,6 +332,7 @@
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				1342A3E6204EEAD500C26B16 /* PeripheralOverviewCell.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -428,9 +471,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				139DA02E204E890D00D852E1 /* NSObject+DI.swift in Sources */,
-				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				607FACD81AFB9204008FA782 /* ScanViewController.swift in Sources */,
+				1342A3E4204EEACC00C26B16 /* PeripheralOverviewCell.swift in Sources */,
 				139DA02C204E87B900D852E1 /* CentralViewModel.swift in Sources */,
+				1342A3DE204ECB8F00C26B16 /* UIView.swift in Sources */,
+				1342A3E8204EEAFF00C26B16 /* UITableViewCell.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				13425906204FE2CC00BBFA10 /* PeripheralViewController.swift in Sources */,
+				1342A3EA204EECDB00C26B16 /* ActionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
