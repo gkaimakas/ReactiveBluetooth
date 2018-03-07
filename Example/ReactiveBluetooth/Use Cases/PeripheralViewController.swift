@@ -73,6 +73,16 @@ public final class PeripheralViewController: UIViewController {
             .on(value: { _ in self.tableView.reloadData() })
             .start()
     }
+
+    override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
+        if segue.identifier == "ServiceViewController",
+            let viewController = segue.destination as? ServiceViewController,
+            let service = sender as? CBService {
+
+            viewController.viewModel = service
+        }
+    }
 }
 
 extension PeripheralViewController: UITableViewDataSource {
@@ -90,6 +100,11 @@ extension PeripheralViewController: UITableViewDataSource {
         cell.accessoryType = .disclosureIndicator
         return cell
     }
+
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let service = dataSource.value[indexPath.item]
+        performSegue(withIdentifier: "ServiceViewController", sender: service)
+    }
 }
 
 extension PeripheralViewController: UITableViewDelegate {
@@ -105,6 +120,4 @@ extension PeripheralViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 64
     }
-
-
 }

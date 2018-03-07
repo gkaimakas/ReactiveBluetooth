@@ -10,6 +10,7 @@
 		13425906204FE2CC00BBFA10 /* PeripheralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13425905204FE2CC00BBFA10 /* PeripheralViewController.swift */; };
 		1342590820500B2000BBFA10 /* ActionSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342590720500B2000BBFA10 /* ActionSectionView.swift */; };
 		1342590B20500B8900BBFA10 /* ActionSectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1342590A20500B8900BBFA10 /* ActionSectionView.xib */; };
+		1342590E2050164E00BBFA10 /* ServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342590D2050164E00BBFA10 /* ServiceViewController.swift */; };
 		1342A3DE204ECB8F00C26B16 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342A3DD204ECB8F00C26B16 /* UIView.swift */; };
 		1342A3E4204EEACC00C26B16 /* PeripheralOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342A3E3204EEACC00C26B16 /* PeripheralOverviewCell.swift */; };
 		1342A3E6204EEAD500C26B16 /* PeripheralOverviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1342A3E5204EEAD500C26B16 /* PeripheralOverviewCell.xib */; };
@@ -43,6 +44,7 @@
 		13425905204FE2CC00BBFA10 /* PeripheralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralViewController.swift; sourceTree = "<group>"; };
 		1342590720500B2000BBFA10 /* ActionSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionSectionView.swift; sourceTree = "<group>"; };
 		1342590A20500B8900BBFA10 /* ActionSectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActionSectionView.xib; sourceTree = "<group>"; };
+		1342590D2050164E00BBFA10 /* ServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceViewController.swift; sourceTree = "<group>"; };
 		1342A3DD204ECB8F00C26B16 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		1342A3E3204EEACC00C26B16 /* PeripheralOverviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralOverviewCell.swift; sourceTree = "<group>"; };
 		1342A3E5204EEAD500C26B16 /* PeripheralOverviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeripheralOverviewCell.xib; sourceTree = "<group>"; };
@@ -96,6 +98,16 @@
 				1342590A20500B8900BBFA10 /* ActionSectionView.xib */,
 			);
 			path = ActionSectionView;
+			sourceTree = "<group>";
+		};
+		1342590C2050162600BBFA10 /* Use Cases */ = {
+			isa = PBXGroup;
+			children = (
+				607FACD71AFB9204008FA782 /* ScanViewController.swift */,
+				13425905204FE2CC00BBFA10 /* PeripheralViewController.swift */,
+				1342590D2050164E00BBFA10 /* ServiceViewController.swift */,
+			);
+			path = "Use Cases";
 			sourceTree = "<group>";
 		};
 		1342A3DC204ECB8400C26B16 /* Extensions */ = {
@@ -182,17 +194,16 @@
 		607FACD21AFB9204008FA782 /* Example for ReactiveBluetooth */ = {
 			isa = PBXGroup;
 			children = (
+				1342590C2050162600BBFA10 /* Use Cases */,
 				139DA02A204E873300D852E1 /* Extensions */,
 				139DA029204E872800D852E1 /* Views */,
 				139DA028204E872200D852E1 /* ViewModels */,
 				139DA027204E871700D852E1 /* Models */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ScanViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
-				13425905204FE2CC00BBFA10 /* PeripheralViewController.swift */,
 			);
 			name = "Example for ReactiveBluetooth";
 			path = ReactiveBluetooth;
@@ -491,6 +502,7 @@
 				139DA02C204E87B900D852E1 /* CentralViewModel.swift in Sources */,
 				1342A3DE204ECB8F00C26B16 /* UIView.swift in Sources */,
 				1342A3E8204EEAFF00C26B16 /* UITableViewCell.swift in Sources */,
+				1342590E2050164E00BBFA10 /* ServiceViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				13425906204FE2CC00BBFA10 /* PeripheralViewController.swift in Sources */,
 				1342590820500B2000BBFA10 /* ActionSectionView.swift in Sources */,

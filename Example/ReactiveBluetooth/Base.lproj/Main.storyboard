@@ -73,11 +73,45 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="Pcz-HV-UMV" id="lSZ-zu-2o4"/>
+                        <segue destination="5My-97-wQT" kind="show" identifier="ServiceViewController" id="0gq-1A-nZZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jry-ad-VUn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1341.5999999999999" y="133.5832083958021"/>
+        </scene>
+        <!--Service View Controller-->
+        <scene sceneID="wzr-wX-5JY">
+            <objects>
+                <viewController id="5My-97-wQT" customClass="ServiceViewController" customModule="ReactiveBluetooth_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="DT6-vf-uOa"/>
+                        <viewControllerLayoutGuide type="bottom" id="JOb-VY-NrO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="QlY-CT-ccq">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="rEX-hr-s3P">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="rEX-hr-s3P" firstAttribute="top" secondItem="DT6-vf-uOa" secondAttribute="bottom" id="ME3-6J-Uaq"/>
+                            <constraint firstAttribute="trailing" secondItem="rEX-hr-s3P" secondAttribute="trailing" id="YpJ-2a-nY9"/>
+                            <constraint firstItem="rEX-hr-s3P" firstAttribute="leading" secondItem="QlY-CT-ccq" secondAttribute="leading" id="md6-Eg-nWP"/>
+                            <constraint firstItem="JOb-VY-NrO" firstAttribute="top" secondItem="rEX-hr-s3P" secondAttribute="bottom" id="qBQ-dt-3YM"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="rEX-hr-s3P" id="DlP-lh-kMt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3bi-AD-oYl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2205.5999999999999" y="133.5832083958021"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="n1i-Rx-q3e">
