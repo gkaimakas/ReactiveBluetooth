@@ -38,7 +38,7 @@ extension CBCentralManager {
         public var hashValue: Int {
             switch self {
             case .showPowerAlert(_): return 2_000
-            case .restoreIdentifier(_): return 2_000_000
+            case .restoreIdentifier(_): return 20_000
             }
         }
 

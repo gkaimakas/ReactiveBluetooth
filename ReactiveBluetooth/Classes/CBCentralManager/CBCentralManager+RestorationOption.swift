@@ -47,8 +47,8 @@ extension CBCentralManager {
         public var hashValue: Int {
             switch self {
             case .peripherals(_): return 3_000
-            case .scanServices(_): return 3_000_000
-            case .scanOptions(_): return 3_000_000_000
+            case .scanServices(_): return 30_000
+            case .scanOptions(_): return 300_000
             }
         }
 

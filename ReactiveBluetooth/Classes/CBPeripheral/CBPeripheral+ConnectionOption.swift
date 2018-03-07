@@ -21,8 +21,8 @@ extension CBPeripheral {
         public var hashValue: Int {
             switch self {
             case .notifyOnConnection(_): return 4_000
-            case .notifyOnDisconnection(_): return 4_000_000
-            case .notifyOnNotification(_): return 4_000_000_000
+            case .notifyOnDisconnection(_): return 40_000
+            case .notifyOnNotification(_): return 400_000
             }
         }
 

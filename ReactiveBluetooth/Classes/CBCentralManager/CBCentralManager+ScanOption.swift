@@ -38,7 +38,7 @@ extension CBCentralManager {
         public var hashValue: Int {
             switch self {
             case .allowDuplicates(_): return 1_000
-            case .solicitedServices(_): return 1_000_000
+            case .solicitedServices(_): return 10_000
             }
         }
 
